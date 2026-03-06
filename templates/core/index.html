@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAP | Home - Student Accommodation</title>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <!-- HEADER - SAME ON ALL PAGES -->
+    <header class="site-header">
+        <div class="container">
+            <nav class="navbar">
+                <!-- LOGO - longlogo.png (YOUR ACTUAL LOGO) -->
+                <div class="logo">
+                    <img src="{% static 'images/longlogo.png' %}" width="220px" height="85px" alt="BUSITEMA UNIVERSITY">
+                </div>
+
+                <!-- Navigation Links -->
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="{% url 'core:index' %}" class="active">Home</a></li>
+                    <li><a href="{% url 'hostels:list' %}">Find Hostels</a></li>
+                    <li><a href="{% url 'landlord:index' %}">For Landlords</a></li>
+                    <li><a href="{% url 'core:contact' %}">About & Contact</a></li>
+                </ul>
+
+                <!-- Campus Selector -->
+                <div class="campus-selector">
+                    <select id="campusSelect" class="campus-dropdown">
+                        <option value="all">🎓 All Campuses</option>
+                        <option value="main">🏛️ Main Campus</option>
+                        <option value="mbale">⚕️ Mbale Campus</option>
+                        <option value="namasagali">🔬 Namasagali Campus</option>
+                        <option value="nagongera">📚 Nagongera Campus</option>
+                        <option value="pallisa">💼 Pallisa Campus</option>
+                        <option value="arapai">🌾 Arapai Campus</option>
+                    </select>
+                    <button class="campus-filter-btn" id="campusFilterBtn">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                </div>
+
+                <!-- Auth Buttons - LOGIN BUTTON (works on all pages) -->
+                <div class="auth-buttons">
+                    <a href="#" class="btn btn-outline" id="loginBtn">Login</a>
+                    <a href="{% url 'landlord:index' %}" class="btn btn-primary">List Hostel</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+    <div class="nav-strip"></div>
+
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Trusted by 5,000+ students across 6 campuses</span>
+                </div>
+                
+                <h1 class="hero-title">
+                    Find Your Perfect <span class="gold">Student Home</span><br>
+                    Near Any Campus
+                </h1>
+                
+                <p class="hero-subtitle">
+                    Discover verified hostels near your university. Safe, affordable, and 
+                    specifically for students. Browse 500+ listings across all 6 campuses.
+                </p>
+                
+                <!-- Search Form -->
+                <div class="hero-search">
+                    <form action="{% url 'hostels:list' %}" method="get" class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" name="q" placeholder="Search by hostel name, location, or campus..." class="search-input">
+                        <button type="submit" class="search-btn">Search <i class="fas fa-arrow-right"></i></button>
+                    </form>
+                </div>
+                
+                <!-- Statistics -->
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">500+</span>
+                        <span class="stat-label">Verified Hostels</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">5,000+</span>
+                        <span class="stat-label">Happy Students</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">200+</span>
+                        <span class="stat-label">Trusted Landlords</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">6</span>
+                        <span class="stat-label">Campuses Covered</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CAMPUS GRID SECTION -->
+    <section class="campuses-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Browse by <span class="gold">Campus</span></h2>
+                <p class="section-subtitle">Select your faculty to find hostels nearby</p>
+            </div>
+            
+            <div class="campus-grid">
+                <a href="{% url 'hostels:list' %}?campus=main" class="campus-card">
+                    <div class="campus-icon"><i class="fas fa-landmark"></i></div>
+                    <h3>Main Campus</h3>
+                    <p class="campus-location">Engineering & Technology</p>
+                </a>
+                <a href="{% url 'hostels:list' %}?campus=mbale" class="campus-card">
+                    <div class="campus-icon"><i class="fas fa-heartbeat"></i></div>
+                    <h3>Mbale Campus</h3>
+                    <p class="campus-location">Health Sciences</p>
+                </a>
+                <a href="{% url 'hostels:list' %}?campus=namasagali" class="campus-card">
+                    <div class="campus-icon"><i class="fas fa-flask"></i></div>
+                    <h3>Namasagali Campus</h3>
+                    <p class="campus-location">Natural Resources</p>
+                </a>
+                <a href="{% url 'hostels:list' %}?campus=nagongera" class="campus-card">
+                    <div class="campus-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                    <h3>Nagongera Campus</h3>
+                    <p class="campus-location">Science & Education</p>
+                </a>
+                <a href="{% url 'hostels:list' %}?campus=pallisa" class="campus-card">
+                    <div class="campus-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>Pallisa Campus</h3>
+                    <p class="campus-location">Management Science</p>
+                </a>
+                <a href="{% url 'hostels:list' %}?campus=arapai" class="campus-card">
+                    <div class="campus-icon"><i class="fas fa-seedling"></i></div>
+                    <h3>Arapai Campus</h3>
+                    <p class="campus-location">Agriculture</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS SECTION -->
+    <section class="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">How It <span class="gold">Works</span></h2>
+                <p class="section-subtitle">Four simple steps to find your perfect student home</p>
+            </div>
+            
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-search"></i></div>
+                    <h3>1. Search</h3>
+                    <p>Browse hostels by campus, location, or price range</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-balance-scale"></i></div>
+                    <h3>2. Compare</h3>
+                    <p>View photos, amenities, and read reviews</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-calendar-check"></i></div>
+                    <h3>3. Book</h3>
+                    <p>Reserve your room with instant confirmation</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <h3>4. Pay</h3>
+                    <p>Secure payment via MTN or Airtel Mobile Money</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA SECTION -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">Own a Hostel Near Campus?</h2>
+                <p class="cta-text">Join 200+ landlords already listing their properties. Reach thousands of students and fill your rooms faster.</p>
+                <a href="{% url 'landlord:index' %}" class="btn btn-large btn-gold">
+                    <i class="fas fa-home"></i> Register as Landlord
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER - SAME ON ALL PAGES -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <!-- About Column with YOUR LOGO -->
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <img src="{% static 'images/longlogo.png' %}" width="200px" height="75px" alt="BUSITEMA UNIVERSITY">
+                    </div>
+                    <p class="footer-text">
+                        Busitema's most trusted student hostel finder. Connecting students with safe, verified accommodation across 6 university campuses.
+                    </p>
+                    <div class="footer-social">
+                        <a href="https://www.facebook.com/BusitemaUniversity"><i class="fab fa-facebook"></i></a>
+                        <a href="https://busitema.ac.ug/"><i class="fab fa-instagram"></i></a>
+                        <a href="https://twitter.com/BusitemaUni"><i class="fab fa-x-twitter"></i></a>
+                        <a href="https://youtube.com/@busitemauniversity8932"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'core:index' %}">Home</a></li>
+                        <li><a href="{% url 'hostels:list' %}">Find Hostels</a></li>
+                        <li><a href="{% url 'landlord:index' %}">For Landlords</a></li>
+                        <li><a href="{% url 'core:contact' %}">About Us</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Campuses -->
+                <div class="footer-col">
+                    <h4>Our Campuses</h4>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'hostels:list' %}?campus=main">Main Campus</a></li>
+                        <li><a href="{% url 'hostels:list' %}?campus=mbale">Mbale Campus</a></li>
+                        <li><a href="{% url 'hostels:list' %}?campus=namasagali">Namasagali Campus</a></li>
+                        <li><a href="{% url 'hostels:list' %}?campus=nagongera">Nagongera Campus</a></li>
+                        <li><a href="{% url 'hostels:list' %}?campus=pallisa">Pallisa Campus</a></li>
+                        <li><a href="{% url 'hostels:list' %}?campus=arapai">Arapai Campus</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact -->
+                <div class="footer-col">
+                    <h4>Contact Us</h4>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-map-pin"></i> Jinja - Malaba Road, P.O.BOX 236, Tororo</li>
+                        <li><i class="fas fa-phone-alt"></i> +256 454 448 808</li>
+                        <li><i class="fas fa-envelope"></i> help@campusaccommodationportal.ug</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 CampusAccommodationPortal. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- LOGIN MODAL - SAME ON ALL PAGES (with YOUR LOGO) -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <button class="modal-close" id="closeModal">&times;</button>
+            <div class="modal-header" style="text-align: center;">
+                <img src="{% static 'images/logo.jpg' %}" width="250px" height="120px" alt="BUSITEMA UNIVERSITY" style="margin-bottom: 15px;">
+                <h3 class="modal-title">Login to Campus Accommodation Portal</h3>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                </form>
+                <p class="text-center mt-3">
+                    Don't have an account? <a href="{% url 'landlord:index' %}">Register here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT - SAME ON ALL PAGES -->
+    <script src="{% static 'js/script.js' %}"></script>
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn')?.addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+        
+        // Login modal - WORKS ON EVERY PAGE
+        document.getElementById('loginBtn')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('loginModal').style.display = 'flex';
+        });
+        
+        document.getElementById('closeModal')?.addEventListener('click', function() {
+            document.getElementById('loginModal').style.display = 'none';
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal-overlay')) {
+                e.target.style.display = 'none';
+            }
+        });
+        
+        // Campus filter button
+        document.getElementById('campusFilterBtn')?.addEventListener('click', function() {
+            const campus = document.getElementById('campusSelect').value;
+            if (campus !== 'all') {
+                window.location.href = "{% url 'hostels:list' %}?campus=" + campus;
+            } else {
+                window.location.href = "{% url 'hostels:list' %}";
+            }
+        });
+    </script>
+<!-- LOGIN MODAL (add to every page) -->
+<div class="modal-overlay" id="loginModal">
+    <div class="modal">
+        <button class="modal-close" id="closeModal">&times;</button>
+        <div class="modal-header" style="text-align: center;">
+            <img src="{% static 'images/logo.jpg' %}" width="250px" height="120px" alt="CAP Logo">
+            <h3 class="modal-title">Login to Campus Accommodation Portal</h3>
+        </div>
+        <div class="modal-body">
+            <form id="loginForm" method="post" action="{% url 'accounts:login' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" name="email" id="loginEmail" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" name="password" id="loginPassword" class="form-control" required>
+                </div>
+                
+                <!-- FORGOT PASSWORD LINK -->
+                <div style="text-align: right; margin-top: 5px; margin-bottom: 15px;">
+                    <a href="{% url 'password_reset' %}" style="color: var(--blue-600); font-size: 13px; text-decoration: none;">
+                        <i class="fas fa-key"></i> Forgot password?
+                    </a>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </form>
+            <p class="text-center mt-3">
+                Don't have an account? <a href="{% url 'landlord:index' %}">Register here</a>
+            </p>
+        </div>
+    </div>
+</div>
+<script>
+// Login modal functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const loginBtn = document.getElementById('loginBtn');
+    const loginLink = document.getElementById('loginLink');
+    const loginModal = document.getElementById('loginModal');
+    const closeModal = document.getElementById('closeModal');
+    
+    if (loginBtn && loginModal) {
+        loginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginModal.style.display = 'flex';
+        });
+    }
+    
+    if (loginLink && loginModal) {
+        loginLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginModal.style.display = 'flex';
+        });
+    }
+    
+    if (closeModal && loginModal) {
+        closeModal.addEventListener('click', function() {
+            loginModal.style.display = 'none';
+        });
+    }
+    
+    window.addEventListener('click', function(e) {
+        if (e.target.classList.contains('modal-overlay')) {
+            e.target.style.display = 'none';
+        }
+    });
+});
+</script>
+<!-- LOGIN MODAL (WITH FORGOT PASSWORD LINK) -->
+<div class="modal-overlay" id="loginModal">
+    <div class="modal">
+        <button class="modal-close" id="closeModal">&times;</button>
+        <div class="modal-header" style="text-align: center;">
+            <img src="{% static 'images/logo.jpg' %}" width="250px" height="120px" alt="BUSITEMA UNIVERSITY">
+            <h3 class="modal-title">Login to Campus Accommodation Portal</h3>
+        </div>
+        <div class="modal-body">
+            <form id="loginForm" method="post" action="{% url 'accounts:login' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" name="email" id="loginEmail" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" name="password" id="loginPassword" class="form-control" required>
+                </div>
+                
+                <!-- FORGOT PASSWORD LINK -->
+                <div style="text-align: right; margin-top: 5px; margin-bottom: 15px;">
+                    <a href="{% url 'password_reset' %}" style="color: var(--blue-600); font-size: 13px; text-decoration: none;">
+                        <i class="fas fa-key"></i> Forgot password?
+                    </a>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </form>
+            <p class="text-center mt-3">
+                Don't have an account? <a href="{% url 'landlord:index' %}">Register here</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL JAVASCRIPT -->
+<script>
+// Login modal functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const loginBtn = document.getElementById('loginBtn');
+    const loginLink = document.getElementById('loginLink');
+    const loginModal = document.getElementById('loginModal');
+    const closeModal = document.getElementById('closeModal');
+    
+    if (loginBtn && loginModal) {
+        loginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginModal.style.display = 'flex';
+        });
+    }
+    
+    if (loginLink && loginModal) {
+        loginLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginModal.style.display = 'flex';
+        });
+    }
+    
+    if (closeModal && loginModal) {
+        closeModal.addEventListener('click', function() {
+            loginModal.style.display = 'none';
+        });
+    }
+    
+    window.addEventListener('click', function(e) {
+        if (e.target.classList.contains('modal-overlay')) {
+            e.target.style.display = 'none';
+        }
+    });
+});
+</script>
+<!-- LOGIN MODAL (WORKING VERSION) -->
+<div class="modal-overlay" id="loginModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+    <div class="modal" style="background: white; width: 90%; max-width: 450px; border-radius: 24px; padding: 30px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+        <button class="modal-close" id="closeModal" style="position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer;">&times;</button>
+        
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="{% static 'images/logo.jpg' %}" width="200px" height="90px" alt="CAP Logo" style="margin-bottom: 10px;">
+            <h3 style="color: #0D1B3E; margin: 0;">Login to Campus Accommodation Portal</h3>
+        </div>
+        
+        <div class="modal-body">
+            <form id="loginForm" method="post" action="{% url 'accounts:login' %}">
+                {% csrf_token %}
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Email</label>
+                    <input type="email" name="email" class="form-control" style="width: 100%; padding: 12px; border: 2px solid #c2e0f5; border-radius: 8px;" required>
+                </div>
+                
+                <div style="margin-bottom: 10px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Password</label>
+                    <input type="password" name="password" class="form-control" style="width: 100%; padding: 12px; border: 2px solid #c2e0f5; border-radius: 8px;" required>
+                </div>
+                
+                <!-- FORGOT PASSWORD LINK - THIS IS WHAT YOU NEED -->
+                <div style="text-align: right; margin-bottom: 20px;">
+                    <a href="{% url 'password_reset' %}" style="color: #2A4B9E; font-size: 13px; text-decoration: none;">
+                        <i class="fas fa-key"></i> Forgot password?
+                    </a>
+                </div>
+                
+                <button type="submit" style="width: 100%; background: linear-gradient(135deg, #D4AF37, #b8960c); color: #0D1B3E; border: none; padding: 14px; border-radius: 50px; font-weight: 700; font-size: 16px; cursor: pointer;">
+                    Login
+                </button>
+            </form>
+            
+            <p style="text-align: center; margin-top: 20px;">
+                Don't have an account? <a href="{% url 'landlord:index' %}" style="color: #D4AF37; font-weight: 600;">Register here</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Modal -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Setting up login modal");
+    
+    const loginBtn = document.getElementById('loginBtn');
+    const loginLink = document.getElementById('loginLink');
+    const loginModal = document.getElementById('loginModal');
+    const closeModal = document.getElementById('closeModal');
+    
+    console.log("Elements found:", {
+        loginBtn: loginBtn ? "yes" : "no",
+        loginLink: loginLink ? "yes" : "no",
+        loginModal: loginModal ? "yes" : "no"
+    });
+    
+    if (loginBtn && loginModal) {
+        loginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginModal.style.display = 'flex';
+            console.log("Login modal opened");
+        });
+    }
+    
+    if (loginLink && loginModal) {
+        loginLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginModal.style.display = 'flex';
+        });
+    }
+    
+    if (closeModal && loginModal) {
+        closeModal.addEventListener('click', function() {
+            loginModal.style.display = 'none';
+        });
+    }
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', function(e) {
+        if (e.target === loginModal) {
+            loginModal.style.display = 'none';
+        }
+    });
+});
+</script>
+</body>
+</html>

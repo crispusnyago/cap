@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+{% load static %}
+<!-- 
+=====================================================================
+CONTACT.HTML - CAMPUS ACCOMMODATION PORTAL (CAP) ABOUT & CONTACT PAGE
+=====================================================================
+Purpose: Professional about/contact page with team, FAQ, and contact form
+Design: Clean white/light blue with gold accents
+=====================================================================
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contact Campus Accommodation Portal - Get help, ask questions, or learn about our team">
+    <title>CAP | About & Contact</title>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/contact.css' %}">
+</head>
+<body>
+    <!-- 
+    =================================================================
+    HEADER / NAVIGATION
+    =================================================================
+    -->
+    <header class="site-header">
+        <div class="container">
+            <nav class="navbar">
+                <!-- Logo -->
+                <div class="logo">
+                    <img src="{% static 'images/longlogo.png' %}" width="220px" height="85px" alt="BUSITEMA UNIVERSITY - Pursuing Excellence">
+                </div>
+
+                <!-- Desktop Navigation -->
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="{% url 'core:index' %}">Home</a></li>
+                    <li><a href="{% url 'hostels:list' %}">Find Hostels</a></li>
+                    <li><a href="{% url 'landlord:index' %}">For Landlords</a></li>
+                    <li><a href="{% url 'core:contact' %}" class="active">About & Contact</a></li>
+                </ul>
+
+                <!-- Campus Selector -->
+                <div class="campus-selector">
+                    <select id="campusSelect" class="campus-dropdown">
+                        <option value="all">🎓 All Campuses</option>
+                        <option value="main">🏛️ Main Campus</option>
+                        <option value="mbale">⚕️ Mbale Campus</option>
+                        <option value="namasagali">🔬 Namasagali Campus</option>
+                        <option value="nagongera">📚 Nagongera Campus</option>
+                        <option value="pallisa">💼 Pallisa Campus</option>
+                        <option value="arapai">🌾 Arapai Campus</option>
+                    </select>
+                    <button class="campus-filter-btn" id="campusFilterBtn">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                </div>
+
+                <!-- Auth Buttons -->
+                <div class="auth-buttons">
+                    <a href="#" class="btn btn-outline" id="loginBtn">Login</a>
+                    <a href="{% url 'landlord:index' %}" class="btn btn-primary">List Hostel</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+    <div class="nav-strip"></div>
+
+    <!-- 
+    =================================================================
+    PAGE HEADER
+    =================================================================
+    -->
+    <section class="page-header">
+        <div class="container">
+            <div class="breadcrumbs">
+                <a href="{% url 'core:index' %}">Home</a> 
+                <i class="fas fa-chevron-right"></i>
+                <span>About & Contact</span>
+            </div>
+            <h1>About <span class="gold">Campus Accommodation Portal</span></h1>
+            <p>Connecting students with safe, verified accommodation since 2025</p>
+        </div>
+    </section>
+
+    <!-- 
+    =================================================================
+    ABOUT SECTION - MISSION & STORY
+    =================================================================
+    -->
+    <section class="about-section">
+        <div class="container">
+            <div class="about-grid">
+                <!-- Left side - Story -->
+                <div class="about-content">
+                    <div class="badge">
+                        <i class="fas fa-scroll"></i>
+                        <span>Our Story</span>
+                    </div>
+                    <h2>Born from a <span class="gold">student's struggle</span></h2>
+                    <p>Campus Accommodation Portal was founded in 2025 by a group of university students who experienced firsthand the difficulty of finding safe, affordable accommodation near campus. We spent weeks walking around, calling landlords, and visiting questionable hostels.</p>
+                    <p>We realized there had to be a better way. So we built CAP - a platform that connects students with verified hostels, making the search process simple, transparent, and stress-free.</p>
+                    <p>Today, we serve over 5,000 students across 6 campuses and have 200+ trusted landlords on our platform. And we're just getting started!</p>
+                </div>
+                
+                <!-- Right side - Stats/Mission -->
+                <div class="stats-card">
+                    <h3>Our Mission</h3>
+                    <div class="mission-text">
+                        "To ensure every student has access to safe, affordable, and quality housing near their campus."
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number">5,000+</div>
+                            <div class="stat-label">Students Housed</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">500+</div>
+                            <div class="stat-label">Verified Hostels</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">200+</div>
+                            <div class="stat-label">Landlords</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">6</div>
+                            <div class="stat-label">Campuses</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 
+    =================================================================
+    TEAM SECTION
+    =================================================================
+    -->
+    <section class="team-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Meet the <span class="gold">Team</span></h2>
+                <p class="section-subtitle">The people behind Campus Accommodation Portal</p>
+            </div>
+            
+            <div class="team-grid">
+                <!-- Team Member 1 -->
+                <div class="team-card">
+                    <div class="team-image">
+                        <img src="https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Nyago Crispus">
+                    </div>
+                    <h3>Nyago Crispus</h3>
+                    <p class="team-role">Founder & Lead Developer</p>
+                    <p class="team-bio">Former student, passionate about student housing. Oversees platform strategy and ensures technical reliability.</p>
+                    <div class="team-social">
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Team Member 2 -->
+                <div class="team-card">
+                    <div class="team-image">
+                        <img src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Arrangan Emmanuel">
+                    </div>
+                    <h3>Arrangan Emmanuel</h3>
+                    <p class="team-role">Co-Developer</p>
+                    <p class="team-bio">Ensures platform flexibility and smooth user experience.</p>
+                    <div class="team-social">
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Team Member 3 -->
+                <div class="team-card">
+                    <div class="team-image">
+                        <img src="https://images.pexels.com/photos/3777944/pexels-photo-3777944.jpeg?auto=compress&cs=tinysrgb&w=400" alt="David Owin">
+                    </div>
+                    <h3>David Owin</h3>
+                    <p class="team-role">Operations Manager</p>
+                    <p class="team-bio">Dean of Students. Ensures hostels meet verification standards and handles landlord support.</p>
+                    <div class="team-social">
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 
+    =================================================================
+    CONTACT SECTION
+    =================================================================
+    -->
+    <section class="contact-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Get in <span class="gold">Touch</span></h2>
+                <p class="section-subtitle">We'd love to hear from you</p>
+            </div>
+            
+            <div class="contact-grid">
+                <!-- Left side - Contact Info -->
+                <div class="contact-info">
+                    <!-- Visit Us -->
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-map-pin"></i>
+                        </div>
+                        <div class="info-content">
+                            <h4>Visit Us</h4>
+                            <p>Jinja - Malaba Road <br>P.O.BOX 236, Tororo</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Call Us -->
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div class="info-content">
+                            <h4>Call / WhatsApp</h4>
+                            <p>+256 704 263 611 (Students)<br>+256 706 312 211 (Landlords)</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Email -->
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="info-content">
+                            <h4>Email</h4>
+                            <p>help@campusaccommodationportal.ug<br>partners@busitema.ac.ug</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Hours -->
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="info-content">
+                            <h4>Support Hours</h4>
+                            <p>Mon-Fri: 8am - 8pm<br>Sat: 9am - 2pm</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Social Links -->
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-x-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Right side - Contact Form -->
+                <div class="contact-form-card">
+                    <h3>Send us a Message</h3>
+                    
+                    <form id="contactForm" class="contact-form" method="post" action="{% url 'core:contact' %}">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Your Name *</label>
+                                <input type="text" name="name" id="contactName" class="form-control" placeholder="e.g., Nyago Crispus" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email *</label>
+                                <input type="email" name="email" id="contactEmail" class="form-control" placeholder="cnyago@busitema.ac.ug" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Subject</label>
+                            <input type="text" name="subject" id="contactSubject" class="form-control" placeholder="e.g., Question about listing">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Message *</label>
+                            <textarea name="message" id="contactMessage" class="form-control" rows="5" placeholder="How can we help you?" required></textarea>
+                        </div>
+                        
+                        <div class="form-check">
+                            <input type="checkbox" name="copy_me" id="copyMe">
+                            <label for="copyMe">Send a copy to my email</label>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-paper-plane"></i> Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 
+    =================================================================
+    MAP SECTION
+    =================================================================
+    -->
+    <section class="map-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Find Us <span class="gold">Here</span></h2>
+            </div>
+
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.637624936878!2d34.01745047355535!3d0.5453009636365133!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x177f6c85991579d5%3A0x6381512b086ba44d!2sBusitema%20University!5e0!3m2!1sen!2sug!4v1771586815671!5m2!1sen!2sug" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- 
+    =================================================================
+    FAQ SECTION - FULL VERSION WITH ALL QUESTIONS
+    =================================================================
+    -->
+    <section class="faq-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Frequently Asked <span class="gold">Questions</span></h2>
+                <p class="section-subtitle">Everything you need to know</p>
+            </div>
+            
+            <div class="faq-container">
+                <!-- FAQ Item 1 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>How do I list my hostel?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Go to the Landlord Portal, create an account, and fill out the registration form. Upload photos of your property and we'll verify within 24 hours. Once verified, your hostel will appear in search results! You'll need to provide your personal details, hostel information, and Google Maps coordinates for accurate location mapping.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 2 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>Is CampusAccommodationPortal free for students?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Absolutely! Browsing, searching, and contacting landlords is completely free for students. You only pay when you book through our secure platform. There are no hidden fees or subscription costs for students.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 3 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>What payment methods do you accept?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We accept MTN Mobile Money and Airtel Money for online bookings. Landlords also have the option to receive direct payments via bank transfer or mobile money. All payments are secured with SSL encryption.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 4 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>How are hostels verified?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We require ID verification, physical visit or video call confirmation, and landlord contact verification. We also collect student reviews to maintain quality standards. Each hostel is personally checked by our team before being listed as "verified".</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 5 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>How do I get my Google Maps coordinates?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>You can get your coordinates by right-clicking on your location in Google Maps and selecting "What's here?" The latitude and longitude will appear at the bottom of the screen. Copy these into the registration form so students can find your exact location.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 6 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>Can I list my hostel for multiple campuses?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! During registration, you can select which campus is nearest to your hostel. If your property is near multiple campuses, you can create separate listings for each or select the primary campus and mention proximity to others in the description.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 
+    =================================================================
+    FOOTER
+    =================================================================
+    -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <!-- About Column -->
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <img src="{% static 'images/longlogo.png' %}" width="200px" height="75px" alt="BUSITEMA UNIVERSITY">
+                    </div>
+                    <div class="footer-logo">
+                        <span>CampusAccom<span class="gold">modationPortal</span></span>
+                    </div>
+                    
+                    <p class="footer-text">
+                        Busitema's most trusted student hostel finder. Connecting students with safe, verified accommodation across 6 university campuses.
+                    </p>
+                    <div class="footer-social">
+                        <a href="https://www.facebook.com/BusitemaUniversity"><i class="fab fa-facebook"></i></a>
+                        <a href="https://busitema.ac.ug/"><i class="fab fa-instagram"></i></a>
+                        <a href="https://twitter.com/BusitemaUni"><i class="fab fa-x-twitter"></i></a>
+                        <a href="https://youtube.com/@busitemauniversity8932"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'core:index' %}">Home</a></li>
+                        <li><a href="{% url 'hostels:list' %}">Find Hostels</a></li>
+                        <li><a href="{% url 'landlord:index' %}">For Landlords</a></li>
+                        <li><a href="{% url 'core:contact' %}">About Us</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Campuses -->
+                <div class="footer-col">
+                    <h4>Our Campuses</h4>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'hostels:list' %}?campus=main">Main Campus</a></li>
+                        <li><a href="{% url 'hostels:list' %}?campus=mbale">Mbale Campus</a></li>
+                        <li><a href="{% url 'hostels:list' %}?campus=namasagali">Namasagali Campus</a></li>
+                        <li><a href="{% url 'hostels:list' %}?campus=nagongera">Nagongera Campus</a></li>
+                        <li><a href="{% url 'hostels:list' %}?campus=pallisa">Pallisa Campus</a></li>
+                        <li><a href="{% url 'hostels:list' %}?campus=arapai">Arapai Campus</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact -->
+                <div class="footer-col">
+                    <h4>Contact Us</h4>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-map-pin"></i> Jinja - Malaba Road, P.O.BOX 236, Tororo</li>
+                        <li><i class="fas fa-phone-alt"></i> +256 454 448 808</li>
+                        <li><i class="fas fa-envelope"></i> help@campusaccommodationportal.ug</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 CampusAccommodationPortal. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 
+    =================================================================
+    LOGIN MODAL
+    =================================================================
+    -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <button class="modal-close" id="closeModal">&times;</button>
+            <div class="modal-header" style="text-align: center;">
+                <img src="{% static 'images/logo.jpg' %}" width="250px" height="120px" alt="BUSITEMA UNIVERSITY">
+                <h3 class="modal-title">Login to Campus Accommodation Portal</h3>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm" method="post" action="{% url 'accounts:login' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" name="email" id="loginEmail" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" name="password" id="loginPassword" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                </form>
+                <p class="text-center mt-3">
+                    Don't have an account? <a href="{% url 'landlord:index' %}">Register here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="{% static 'js/script.js' %}"></script>
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn')?.addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+        
+        // Login modal
+        document.getElementById('loginBtn')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('loginModal').style.display = 'flex';
+        });
+        
+        document.getElementById('closeModal')?.addEventListener('click', function() {
+            document.getElementById('loginModal').style.display = 'none';
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal-overlay')) {
+                e.target.style.display = 'none';
+            }
+        });
+        
+        // FAQ Accordion
+        document.querySelectorAll('.faq-item').forEach(item => {
+            const question = item.querySelector('.faq-question');
+            if (question) {
+                question.addEventListener('click', () => {
+                    item.classList.toggle('active');
+                });
+            }
+        });
+    </script>
+<!-- LOGIN MODAL (WORKING VERSION) -->
+<div class="modal-overlay" id="loginModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+    <div class="modal" style="background: white; width: 90%; max-width: 450px; border-radius: 24px; padding: 30px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+        <button class="modal-close" id="closeModal" style="position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer;">&times;</button>
+        
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="{% static 'images/logo.jpg' %}" width="200px" height="90px" alt="CAP Logo" style="margin-bottom: 10px;">
+            <h3 style="color: #0D1B3E; margin: 0;">Login to Campus Accommodation Portal</h3>
+        </div>
+        
+        <div class="modal-body">
+            <form id="loginForm" method="post" action="{% url 'accounts:login' %}">
+                {% csrf_token %}
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Email</label>
+                    <input type="email" name="email" class="form-control" style="width: 100%; padding: 12px; border: 2px solid #c2e0f5; border-radius: 8px;" required>
+                </div>
+                
+                <div style="margin-bottom: 10px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Password</label>
+                    <input type="password" name="password" class="form-control" style="width: 100%; padding: 12px; border: 2px solid #c2e0f5; border-radius: 8px;" required>
+                </div>
+                
+                <!-- FORGOT PASSWORD LINK - THIS IS WHAT YOU NEED -->
+                <div style="text-align: right; margin-bottom: 20px;">
+                    <a href="{% url 'password_reset' %}" style="color: #2A4B9E; font-size: 13px; text-decoration: none;">
+                        <i class="fas fa-key"></i> Forgot password?
+                    </a>
+                </div>
+                
+                <button type="submit" style="width: 100%; background: linear-gradient(135deg, #D4AF37, #b8960c); color: #0D1B3E; border: none; padding: 14px; border-radius: 50px; font-weight: 700; font-size: 16px; cursor: pointer;">
+                    Login
+                </button>
+            </form>
+            
+            <p style="text-align: center; margin-top: 20px;">
+                Don't have an account? <a href="{% url 'landlord:index' %}" style="color: #D4AF37; font-weight: 600;">Register here</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Modal -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Setting up login modal");
+    
+    const loginBtn = document.getElementById('loginBtn');
+    const loginLink = document.getElementById('loginLink');
+    const loginModal = document.getElementById('loginModal');
+    const closeModal = document.getElementById('closeModal');
+    
+    console.log("Elements found:", {
+        loginBtn: loginBtn ? "yes" : "no",
+        loginLink: loginLink ? "yes" : "no",
+        loginModal: loginModal ? "yes" : "no"
+    });
+    
+    if (loginBtn && loginModal) {
+        loginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginModal.style.display = 'flex';
+            console.log("Login modal opened");
+        });
+    }
+    
+    if (loginLink && loginModal) {
+        loginLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginModal.style.display = 'flex';
+        });
+    }
+    
+    if (closeModal && loginModal) {
+        closeModal.addEventListener('click', function() {
+            loginModal.style.display = 'none';
+        });
+    }
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', function(e) {
+        if (e.target === loginModal) {
+            loginModal.style.display = 'none';
+        }
+    });
+});
+</script>
+</body>
+</html>

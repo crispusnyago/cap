@@ -1,0 +1,336 @@
+n<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAP | Manage Hostel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        .manage-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-header h1 {
+            color: #0D1B3E;
+            font-size: 28px;
+        }
+        
+        .form-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #e1f0fa;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #0D1B3E;
+        }
+        
+        .form-group label i {
+            color: #D4AF37;
+            margin-right: 8px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1f0fa;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #D4AF37;
+            outline: none;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn-primary {
+            background: #2A4B9E;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background: #1f3a7a;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #2A4B9E;
+            color: #2A4B9E;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-outline:hover {
+            background: #2A4B9E;
+            color: white;
+        }
+        
+        .btn-danger {
+            background: #EF4444;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .image-preview {
+            width: 100%;
+            height: 200px;
+            background: #f8fafc;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            border: 2px dashed #e1f0fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .stats-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #e1f0fa;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #D4AF37;
+        }
+        
+        .stat-label {
+            color: #4a5568;
+            font-size: 13px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <img src="{% static 'images/longlogo.png' %}" width="220px" height="85px" alt="BUSITEMA UNIVERSITY">
+                </div>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="{% url 'core:index' %}">Home</a></li>
+                    <li><a href="{% url 'hostels:list' %}">Find Hostels</a></li>
+                    <li><a href="{% url 'landlord:index' %}" class="active">For Landlords</a></li>
+                    <li><a href="{% url 'core:contact' %}">About & Contact</a></li>
+                </ul>
+                <div class="auth-buttons">
+                    <span class="btn btn-outline">Welcome, {{ user.first_name }}</span>
+                    <a href="{% url 'accounts:logout' %}" class="btn btn-primary">Logout</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="manage-container">
+        <div class="page-header">
+            <h1><i class="fas fa-edit" style="color: #D4AF37;"></i> Manage Hostel</h1>
+            <a href="{% url 'landlord:dashboard' %}" class="btn-outline">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="stats-card">
+            <div class="stats-grid">
+                <div>
+                    <div class="stat-value">{{ hostel.total_rooms }}</div>
+                    <div class="stat-label">Total Rooms</div>
+                </div>
+                <div>
+                    <div class="stat-value">{{ hostel.occupied_rooms }}</div>
+                    <div class="stat-label">Occupied</div>
+                </div>
+                <div>
+                    <div class="stat-value">{{ hostel.available_rooms }}</div>
+                    <div class="stat-label">Available</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Form -->
+        <div class="form-card">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label><i class="fas fa-image"></i> Hostel Image</label>
+                    <div class="image-preview" id="imagePreview">
+                        {% if hostel.images.first %}
+                            <img src="{{ hostel.images.first.image.url }}" alt="{{ hostel.name }}" id="previewImg">
+                        {% else %}
+                            <i class="fas fa-cloud-upload-alt" style="font-size: 40px; color: #cbd5e1;"></i>
+                        {% endif %}
+                    </div>
+                    <input type="file" name="image" id="imageInput" accept="image/*" style="margin-top: 10px;">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-hotel"></i> Hostel Name</label>
+                        <input type="text" name="name" class="form-control" value="{{ hostel.name }}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-tag"></i> Hostel Type</label>
+                        <select name="hostel_type" class="form-control" required>
+                            <option value="mixed" {% if hostel.hostel_type == 'mixed' %}selected{% endif %}>Mixed</option>
+                            <option value="male" {% if hostel.hostel_type == 'male' %}selected{% endif %}>Male Only</option>
+                            <option value="female" {% if hostel.hostel_type == 'female' %}selected{% endif %}>Female Only</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> Campus</label>
+                        <select name="campus" class="form-control" required>
+                            <option value="main" {% if hostel.campus == 'main' %}selected{% endif %}>Main Campus</option>
+                            <option value="mbale" {% if hostel.campus == 'mbale' %}selected{% endif %}>Mbale Campus</option>
+                            <option value="namasagali" {% if hostel.campus == 'namasagali' %}selected{% endif %}>Namasagali Campus</option>
+                            <option value="nagongera" {% if hostel.campus == 'nagongera' %}selected{% endif %}>Nagongera Campus</option>
+                            <option value="pallisa" {% if hostel.campus == 'pallisa' %}selected{% endif %}>Pallisa Campus</option>
+                            <option value="arapai" {% if hostel.campus == 'arapai' %}selected{% endif %}>Arapai Campus</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-map-pin"></i> Location</label>
+                        <input type="text" name="location" class="form-control" value="{{ hostel.village }}" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-money-bill"></i> Price (UGX)</label>
+                        <input type="number" name="price" class="form-control" value="{{ hostel.price_per_semester }}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-bed"></i> Total Rooms</label>
+                        <input type="number" name="total_rooms" class="form-control" value="{{ hostel.total_rooms }}" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-align-left"></i> Description</label>
+                    <textarea name="description" class="form-control" rows="4">{{ hostel.description }}</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> Contact Phone</label>
+                    <input type="tel" name="contact_phone" class="form-control" value="{{ hostel.contact_phone }}" required>
+                </div>
+                
+                <div class="btn-group">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                    <a href="{% url 'landlord:dashboard' %}" class="btn-outline">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 Campus Accommodation Portal</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/script.js' %}"></script>
+    <script>
+        // Image preview
+        document.getElementById('imageInput')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('previewImg');
+                    if (preview) {
+                        preview.src = e.target.result;
+                    } else {
+                        document.getElementById('imagePreview').innerHTML = `<img src="${e.target.result}" id="previewImg" style="width:100%; height:100%; object-fit:cover;">`;
+                    }
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>

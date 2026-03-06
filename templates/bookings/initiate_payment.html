@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>CAP | Payment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .payment-container {
+            max-width: 500px;
+            margin: 50px auto;
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .payment-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .payment-header h1 {
+            color: #0D1B3E;
+            font-size: 24px;
+        }
+        .payment-header i {
+            color: #D4AF37;
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        .booking-summary {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        .booking-summary h3 {
+            color: #0D1B3E;
+            margin-bottom: 10px;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e1f0fa;
+        }
+        .total-row {
+            font-weight: 700;
+            color: #D4AF37;
+            font-size: 18px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #0D1B3E;
+        }
+        .form-group i {
+            color: #D4AF37;
+            margin-right: 5px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1f0fa;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+        .payment-methods {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .payment-method {
+            border: 2px solid #e1f0fa;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .payment-method:hover {
+            border-color: #D4AF37;
+        }
+        .payment-method.selected {
+            border-color: #D4AF37;
+            background: #fff8e7;
+        }
+        .payment-method input[type="radio"] {
+            display: none;
+        }
+        .payment-method i {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .mtn i {
+            color: #ffcc00;
+        }
+        .airtel i {
+            color: #ed1c24;
+        }
+        .btn-pay {
+            width: 100%;
+            background: linear-gradient(135deg, #D4AF37, #b8960c);
+            color: #0D1B3E;
+            border: none;
+            padding: 15px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .btn-pay:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(212,175,55,0.5);
+        }
+        .charges-info {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #4a5568;
+        }
+        .charges-info i {
+            color: #D4AF37;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <div class="payment-header">
+            <i class="fas fa-lock"></i>
+            <h1>Secure Payment</h1>
+        </div>
+        
+        <div class="booking-summary">
+            <h3>{{ booking.hostel.name }}</h3>
+            <div class="summary-row">
+                <span>Room Price:</span>
+                <span>UGX {{ booking.amount_paid|floatformat:0 }}</span>
+            </div>
+            <div class="summary-row total-row">
+                <span>Total:</span>
+                <span>UGX {{ booking.amount_paid|floatformat:0 }}</span>
+            </div>
+        </div>
+        
+        <form method="post" action="{% url 'bookings:initiate_payment' booking.id %}">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label><i class="fas fa-phone"></i> Mobile Money Number</label>
+                <input type="tel" name="phone_number" class="form-control" 
+                       placeholder="e.g., 0772123456" required pattern="[0-9]{10}">
+                <small style="color: #666;">Enter the phone number registered with mobile money</small>
+            </div>
+            
+            <div class="payment-methods">
+                <label class="payment-method mtn">
+                    <input type="radio" name="payment_method" value="mtn" required>
+                    <i class="fas fa-phone-alt"></i>
+                    <div>MTN MoMo</div>
+                </label>
+                <label class="payment-method airtel">
+                    <input type="radio" name="payment_method" value="airtel">
+                    <i class="fas fa-sim-card"></i>
+                    <div>Airtel Money</div>
+                </label>
+            </div>
+            
+            <div class="charges-info">
+                <i class="fas fa-info-circle"></i>
+                A 3% transaction fee will be applied. You will receive an OTP to verify your payment.
+            </div>
+            
+            <button type="submit" class="btn-pay">
+                <i class="fas fa-arrow-right"></i> Continue to Verification
+            </button>
+        </form>
+    </div>
+    
+    <script>
+        // Highlight selected payment method
+        document.querySelectorAll('.payment-method').forEach(method => {
+            method.addEventListener('click', function() {
+                document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
+                this.classList.add('selected');
+                this.querySelector('input[type="radio"]').checked = true;
+            });
+        });
+    </script>
+</body>
+</html>

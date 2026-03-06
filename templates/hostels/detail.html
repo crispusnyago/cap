@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAP | Hostel Details</title>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <img src="{% static 'images/longlogo.png' %}" width="220px" height="85px" alt="BUSITEMA UNIVERSITY">
+                </div>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="{% url 'core:index' %}">Home</a></li>
+                    <li><a href="{% url 'hostels:list' %}" class="active">Find Hostels</a></li>
+                    <li><a href="{% url 'landlord:index' %}">For Landlords</a></li>
+                    <li><a href="{% url 'core:contact' %}">About & Contact</a></li>
+                </ul>
+                <div class="campus-selector">
+                    <select id="campusSelect" class="campus-dropdown">
+                        <option value="all">🎓 All Campuses</option>
+                        <option value="main">🏛️ Main Campus</option>
+                        <option value="mbale">⚕️ Mbale Campus</option>
+                        <option value="namasagali">🔬 Namasagali Campus</option>
+                        <option value="nagongera">📚 Nagongera Campus</option>
+                        <option value="pallisa">💼 Pallisa Campus</option>
+                        <option value="arapai">🌾 Arapai Campus</option>
+                    </select>
+                    <button class="campus-filter-btn" id="campusFilterBtn">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                </div>
+                <div class="auth-buttons">
+                    <a href="#" class="btn btn-outline" id="loginBtn">Login</a>
+                    <a href="{% url 'landlord:index' %}" class="btn btn-primary">List Hostel</a>
+                </div>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+    <div class="nav-strip"></div>
+
+    <!-- PAGE HEADER WITH BREADCRUMBS -->
+    <section class="page-header">
+        <div class="container">
+            <div class="breadcrumbs">
+                <a href="{% url 'core:index' %}">Home</a> 
+                <i class="fas fa-chevron-right"></i>
+                <a href="{% url 'hostels:list' %}">Hostels</a>
+                <i class="fas fa-chevron-right"></i>
+                <span>{{ hostel.name }}</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOSTEL DETAILS SECTION -->
+    <section class="hostel-detail-section" style="padding: 40px 0;">
+        <div class="container">
+            {% if hostel %}
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+                <!-- LEFT COLUMN - IMAGES -->
+                <div>
+                    <!-- Main Image -->
+                    <div style="width: 100%; height: 350px; border-radius: 16px; overflow: hidden; margin-bottom: 20px; border: 2px solid var(--gold-500);">
+                        {% if hostel.images.first %}
+                            <img src="{{ hostel.images.first.image.url }}" alt="{{ hostel.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        {% else %}
+                            <img src="{% static 'images/default-hostel.jpg' %}" alt="{{ hostel.name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Thumbnail Gallery -->
+                    {% if hostel.images.count > 1 %}
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+                        {% for image in hostel.images.all|slice:"1:5" %}
+                        <div style="height: 80px; border-radius: 8px; overflow: hidden; cursor: pointer; border: 1px solid var(--blue-200);" onclick="document.querySelector('.hostel-detail-section img').src='{{ image.image.url }}'">
+                            <img src="{{ image.image.url }}" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- RIGHT COLUMN - DETAILS -->
+                <div>
+                    <!-- Hostel Name & Badge -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h1 style="font-size: 32px; margin: 0;">{{ hostel.name }}</h1>
+                        {% if hostel.is_verified %}
+                        <span style="background-color: var(--gold-500); color: var(--blue-900); padding: 5px 15px; border-radius: 50px; font-weight: 600;">✓ Verified</span>
+                        {% endif %}
+                    </div>
+<!-- Reviews Section -->
+<div class="reviews-section" style="margin-top: 50px;">
+    <h2 style="display: flex; align-items: center; gap: 10px;">
+        <i class="fas fa-star" style="color: #D4AF37;"></i>
+        Reviews
+        {% if review_count > 0 %}
+        <span style="font-size: 16px; color: #666;">({{ avg_rating }} average from {{ review_count }} reviews)</span>
+        {% endif %}
+    </h2>
+    
+    {% if user.is_authenticated and user.user_type == 'student' %}
+        {% if user_review %}
+            <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin-bottom: 30px;">
+                <h4>Your Review</h4>
+                <div style="color: #D4AF37; margin-bottom: 10px;">
+                    {% for i in "12345"|make_list %}
+                        {% if forloop.counter <= user_review.rating %}
+                            <i class="fas fa-star"></i>
+                        {% else %}
+                            <i class="far fa-star"></i>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <p>{{ user_review.comment }}</p>
+                <small style="color: #666;">{{ user_review.created_at|date:"F d, Y" }}</small>
+                <div style="margin-top: 10px;">
+                    <a href="{% url 'hostels:add_review' hostel.id %}" class="btn btn-outline" style="padding: 8px 20px;">Edit Review</a>
+                </div>
+            </div>
+        {% else %}
+            <div style="text-align: center; padding: 40px; background: #f8fafc; border-radius: 12px; margin-bottom: 30px;">
+                <i class="fas fa-pen" style="font-size: 48px; color: #D4AF37; margin-bottom: 15px;"></i>
+                <h4>Share Your Experience</h4>
+                <p style="color: #666; margin-bottom: 20px;">Have you stayed here? Let others know what you think!</p>
+                <a href="{% url 'hostels:add_review' hostel.id %}" class="btn btn-primary">Write a Review</a>
+            </div>
+        {% endif %}
+    {% endif %}
+    
+    {% if reviews %}
+        <div style="display: grid; gap: 20px;">
+            {% for review in reviews %}
+            <div style="background: white; border: 1px solid #e1f0fa; border-radius: 12px; padding: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <div>
+                        <strong>{{ review.student.get_full_name|default:review.student.username }}</strong>
+                        <span style="color: #666; font-size: 13px; margin-left: 10px;">{{ review.created_at|date:"M d, Y" }}</span>
+                    </div>
+                    <div style="color: #D4AF37;">
+                        {% for i in "12345"|make_list %}
+                            {% if forloop.counter <= review.rating %}
+                                <i class="fas fa-star"></i>
+                            {% else %}
+                                <i class="far fa-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <p style="color: #4a5568; line-height: 1.6;">{{ review.comment }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="text-align: center; color: #666; padding: 40px;">No reviews yet. Be the first to review!</p>
+    {% endif %}
+</div>
+                    
+                    <!-- Location -->
+                    <p style="display: flex; align-items: center; gap: 10px; color: var(--gray-600); margin-bottom: 20px;">
+                        <i class="fas fa-map-pin" style="color: var(--gold-500);"></i> 
+                        {% if hostel.campus == 'main' %}Main Campus
+                        {% elif hostel.campus == 'mbale' %}Mbale Campus
+                        {% elif hostel.campus == 'namasagali' %}Namasagali Campus
+                        {% elif hostel.campus == 'nagongera' %}Nagongera Campus
+                        {% elif hostel.campus == 'pallisa' %}Pallisa Campus
+                        {% elif hostel.campus == 'arapai' %}Arapai Campus
+                        {% endif %} - {{ hostel.location }}
+                    </p>
+                    
+                    <!-- Price -->
+                    <div style="background-color: var(--blue-50); padding: 20px; border-radius: 16px; margin-bottom: 25px;">
+                        <span style="font-size: 14px; color: var(--gray-600);">Price per Semester</span>
+                        <div style="font-size: 36px; font-weight: 700; color: var(--gold-500);">UGX {{ hostel.price_per_semester|floatformat:0 }}</div>
+                    </div>
+                    
+                    <!-- Description -->
+                    {% if hostel.description %}
+                    <div style="margin-bottom: 25px;">
+                        <h3>Description</h3>
+                        <p style="color: var(--gray-600); line-height: 1.6;">{{ hostel.description }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Room Info -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;">
+                        <div style="background-color: var(--blue-50); padding: 15px; border-radius: 12px; text-align: center;">
+                            <i class="fas fa-bed" style="color: var(--gold-500); font-size: 24px; margin-bottom: 5px;"></i>
+                            <div style="font-weight: 700;">{{ hostel.total_rooms }} Total Rooms</div>
+                        </div>
+                        <div style="background-color: var(--blue-50); padding: 15px; border-radius: 12px; text-align: center;">
+                            <i class="fas fa-door-open" style="color: var(--gold-500); font-size: 24px; margin-bottom: 5px;"></i>
+                            <div style="font-weight: 700;">{{ hostel.available_rooms }} Available</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Facilities -->
+                    {% if hostel.facilities.all %}
+                    <div style="margin-bottom: 25px;">
+                        <h3>Facilities</h3>
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                            {% for facility in hostel.facilities.all %}
+                                {% if facility.is_available %}
+                                <span style="background-color: var(--blue-100); color: var(--blue-600); padding: 8px 15px; border-radius: 50px; font-size: 14px; display: flex; align-items: center; gap: 5px;">
+                                    <i class="fas {{ facility.facility.icon }}"></i> {{ facility.facility.name }}
+                                </span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Contact Info -->
+                    <div style="background-color: var(--blue-50); padding: 20px; border-radius: 16px; margin-bottom: 25px;">
+                        <h3 style="margin-bottom: 15px;">Contact Information</h3>
+                        <p><i class="fas fa-phone" style="color: var(--gold-500); width: 25px;"></i> {{ hostel.contact_phone }}</p>
+                        {% if hostel.alternative_phone %}
+                        <p><i class="fas fa-phone-alt" style="color: var(--gold-500); width: 25px;"></i> {{ hostel.alternative_phone }} (Alt)</p>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div style="display: flex; gap: 15px;">
+                        <a href="{% url 'hostels:list' %}" class="btn btn-outline" style="flex: 1; padding: 15px; text-align: center;">
+                            <i class="fas fa-arrow-left"></i> Back to Hostels
+                        </a>
+                        <!-- WORKING BOOKING BUTTON - OPENS MODAL -->
+                        <button class="btn btn-primary" style="flex: 1; padding: 15px;" onclick="openBookingModal('{{ hostel.id }}', '{{ hostel.name }}', '{{ hostel.price_per_semester }}')">
+                            <i class="fas fa-calendar-check"></i> Book Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <!-- Hostel Not Found -->
+            <div style="text-align: center; padding: 80px 0;">
+                <i class="fas fa-exclamation-circle" style="font-size: 64px; color: var(--gold-500); margin-bottom: 20px;"></i>
+                <h2>Hostel Not Found</h2>
+                <p style="color: var(--gray-600); margin-bottom: 30px;">The hostel you're looking for doesn't exist or has been removed.</p>
+                <a href="{% url 'hostels:list' %}" class="btn btn-primary">Browse All Hostels</a>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- BOOKING MODAL -->
+    <div class="modal-overlay" id="bookingModal">
+        <div class="modal" style="max-width: 500px;">
+            <button class="modal-close" id="closeBookingModal">&times;</button>
+            <div class="modal-header">
+                <h3 class="modal-title">Book Your Room</h3>
+            </div>
+            <div class="modal-body">
+                <form id="bookingForm">
+                    <div class="form-group">
+                        <label>Hostel</label>
+                        <input type="text" id="bookingHostel" class="form-control" readonly>
+                        <input type="hidden" id="bookingHostelId" name="hostel_id">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Your Full Name</label>
+                        <input type="text" id="studentName" class="form-control" placeholder="e.g., Crispus Nyago" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Student Email</label>
+                        <input type="email" id="studentEmail" class="form-control" placeholder="cnyago@busitema.ac.ug" required>
+                    </div>
+                    
+                    <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group">
+                            <label>Check-in Date</label>
+                            <input type="date" id="checkInDate" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Semester</label>
+                            <select id="semester" class="form-control" required>
+                                <option value="">Select</option>
+                                <option value="1">Semester 1</option>
+                                <option value="2">Semester 2</option>
+                                <option value="both">Both Semesters</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Price Summary with Payment Options -->
+                    <div class="price-summary" style="background-color: var(--blue-50); padding: 15px; border-radius: 12px; margin: 20px 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>Room Price (Full Semester):</span>
+                            <span id="modalPrice">UGX 0</span>
+                        </div>
+                        
+                        <!-- Payment Option Selection -->
+                        <div style="margin: 15px 0;">
+                            <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; padding: 10px; border: 1px solid var(--blue-200); border-radius: 8px;">
+                                <input type="radio" name="paymentAmount" value="full" checked>
+                                <span><strong>Pay Full Amount</strong> - UGX <span id="fullAmount">0</span></span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 10px; padding: 10px; border: 1px solid var(--blue-200); border-radius: 8px;">
+                                <input type="radio" name="paymentAmount" value="half">
+                                <span><strong>Pay 50% Deposit</strong> - UGX <span id="halfAmount">0</span> <small style="color: var(--gray-500);">(Balance due in 30 days)</small></span>
+                            </label>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; font-weight: 700; border-top: 1px solid var(--blue-200); padding-top: 10px;">
+                            <span>Total Due Now:</span>
+                            <span id="modalTotal">UGX 0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Payment Method</label>
+                        <div style="display: flex; gap: 20px;">
+                            <label><input type="radio" name="paymentMethod" value="mtn" checked> <i class="fas fa-phone-alt" style="color: #ffcc00;"></i> MTN MoMo</label>
+                            <label><input type="radio" name="paymentMethod" value="airtel"> <i class="fas fa-sim-card" style="color: #ed1c24;"></i> Airtel Money</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Mobile Money Number</label>
+                        <input type="tel" id="phoneNumber" class="form-control" placeholder="0704263611" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-block" style="width: 100%; padding: 15px;">
+                        <i class="fas fa-lock"></i> Pay Now with Mobile Money
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- RECEIPT MODAL -->
+    <div class="modal-overlay" id="receiptModal">
+        <div class="modal" style="max-width: 400px;">
+            <button class="modal-close" id="closeReceiptModal">&times;</button>
+            <div class="modal-header" style="text-align: center;">
+                <i class="fas fa-check-circle" style="font-size: 48px; color: var(--success);"></i>
+                <h3 class="modal-title">Payment Successful!</h3>
+            </div>
+            <div class="modal-body">
+                <div style="background-color: var(--blue-50); padding: 20px; border-radius: 12px;">
+                    <p><strong>Reference:</strong> <span id="receiptRef">MOMO-ABC123</span></p>
+                    <p><strong>Hostel:</strong> <span id="receiptHostel"></span></p>
+                    <p><strong>Amount:</strong> <span id="receiptAmount"></span></p>
+                    <p><strong>Phone:</strong> <span id="receiptPhone"></span></p>
+                    <p><strong>Method:</strong> <span id="receiptMethod"></span></p>
+                    <p><strong>Date:</strong> <span id="receiptDate"></span></p>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button class="btn btn-primary" style="flex: 1;" onclick="window.print()">Print</button>
+                    <button class="btn btn-outline" style="flex: 1;" onclick="downloadReceipt()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== COMPLETE FOOTER ========== -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <!-- About Column -->
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <img src="{% static 'images/longlogo.png' %}" width="200px" height="75px" alt="BUSITEMA UNIVERSITY">
+                    </div>
+                    <div class="footer-logo">
+                        <span>CampusAccom<span class="gold">modationPortal</span></span>
+                    </div>
+                    <p class="footer-text">
+                        Busitema's most trusted student hostel finder. 
+                        Connecting students with safe, verified accommodation 
+                        across 6 university campuses.
+                    </p>
+                    <div class="footer-social">
+                        <a href="https://www.facebook.com/BusitemaUniversity"><i class="fab fa-facebook"></i></a>
+                        <a href="https://busitema.ac.ug/"><i class="fab fa-instagram"></i></a>
+                        <a href="https://twitter.com/BusitemaUni"><i class="fab fa-x-twitter"></i></a>
+                        <a href="https://youtube.com/@busitemauniversity8932"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'core:index' %}">Home</a></li>
+                        <li><a href="{% url 'hostels:list' %}">Find Hostels</a></li>
+                        <li><a href="{% url 'landlord:index' %}">For Landlords</a></li>
+                        <li><a href="{% url 'core:contact' %}">About Us</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Campuses -->
+                <div class="footer-col">
+                    <h4>Our Campuses</h4>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'hostels:list' %}?campus=main">Main Campus</a></li>
+                        <li><a href="{% url 'hostels:list' %}?campus=mbale">Mbale Campus</a></li>
+                        <li><a href="{% url 'hostels:list' %}?campus=namasagali">Namasagali Campus</a></li>
+                        <li><a href="{% url 'hostels:list' %}?campus=nagongera">Nagongera Campus</a></li>
+                        <li><a href="{% url 'hostels:list' %}?campus=pallisa">Pallisa Campus</a></li>
+                        <li><a href="{% url 'hostels:list' %}?campus=arapai">Arapai Campus</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact -->
+                <div class="footer-col">
+                    <h4>Contact Us</h4>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-map-pin"></i> Jinja - Malaba Road, P.O.BOX 236, Tororo</li>
+                        <li><i class="fas fa-phone-alt"></i> +256 454 448 808</li>
+                        <li><i class="fas fa-envelope"></i> help@campusaccommodationportal.ug</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 CampusAccommodationPortal. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- LOGIN MODAL -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <button class="modal-close" id="closeModal">&times;</button>
+            <div class="modal-header" style="text-align: center;">
+                <img src="{% static 'images/logo.jpg' %}" width="250px" height="120px" alt="BUSITEMA UNIVERSITY">
+                <h3 class="modal-title">Login to Campus Accommodation Portal</h3>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/script.js' %}"></script>
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn')?.addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+        
+        // Login modal
+        document.getElementById('loginBtn')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('loginModal').style.display = 'flex';
+        });
+        
+        document.getElementById('closeModal')?.addEventListener('click', function() {
+            document.getElementById('loginModal').style.display = 'none';
+        });
+        
+        // Campus filter button
+        document.getElementById('campusFilterBtn')?.addEventListener('click', function() {
+            const campus = document.getElementById('campusSelect').value;
+            if (campus !== 'all') {
+                window.location.href = "{% url 'hostels:list' %}?campus=" + campus;
+            } else {
+                window.location.href = "{% url 'hostels:list' %}";
+            }
+        });
+        
+        // Booking Modal Functions
+        function openBookingModal(id, name, price) {
+            document.getElementById('bookingHostel').value = name;
+            document.getElementById('bookingHostelId').value = id;
+            document.getElementById('modalPrice').innerText = 'UGX ' + price;
+            document.getElementById('fullAmount').innerText = price;
+            document.getElementById('halfAmount').innerText = Math.floor(price/2);
+            document.getElementById('modalTotal').innerText = 'UGX ' + price;
+            document.getElementById('bookingModal').style.display = 'flex';
+            
+            // Set minimum date for check-in
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('checkInDate').min = today;
+        }
+        
+        // Close booking modal
+        document.getElementById('closeBookingModal')?.addEventListener('click', function() {
+            document.getElementById('bookingModal').style.display = 'none';
+        });
+        
+        // Payment amount toggle
+        document.querySelectorAll('input[name="paymentAmount"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const price = parseInt(document.getElementById('fullAmount').innerText);
+                if (this.value === 'full') {
+                    document.getElementById('modalTotal').innerText = 'UGX ' + price;
+                } else {
+                    document.getElementById('modalTotal').innerText = 'UGX ' + Math.floor(price/2);
+                }
+            });
+        });
+        
+        // Booking form submission
+        document.getElementById('bookingForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('studentName').value;
+            const email = document.getElementById('studentEmail').value;
+            const date = document.getElementById('checkInDate').value;
+            const semester = document.getElementById('semester').value;
+            const phone = document.getElementById('phoneNumber').value;
+            
+            if (!name || !email || !date || !semester || !phone) {
+                alert('Please fill all fields');
+                return;
+            }
+            
+            // Show processing
+            alert('Processing payment...');
+            
+            // Simulate payment processing
+            setTimeout(function() {
+                document.getElementById('bookingModal').style.display = 'none';
+                
+                // Update receipt
+                document.getElementById('receiptRef').innerText = 'MOMO-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+                document.getElementById('receiptHostel').innerText = document.getElementById('bookingHostel').value;
+                document.getElementById('receiptAmount').innerText = document.getElementById('modalTotal').innerText;
+                document.getElementById('receiptPhone').innerText = phone;
+                
+                const method = document.querySelector('input[name="paymentMethod"]:checked').value;
+                document.getElementById('receiptMethod').innerText = method === 'mtn' ? 'MTN MoMo' : 'Airtel Money';
+                
+                const now = new Date();
+                document.getElementById('receiptDate').innerText = now.toLocaleString();
+                
+                // Show receipt
+                document.getElementById('receiptModal').style.display = 'flex';
+            }, 2000);
+        });
+        
+        // Close receipt modal
+        document.getElementById('closeReceiptModal')?.addEventListener('click', function() {
+            document.getElementById('receiptModal').style.display = 'none';
+        });
+        
+        // Download receipt function
+        window.downloadReceipt = function() {
+            const ref = document.getElementById('receiptRef').innerText;
+            const hostel = document.getElementById('receiptHostel').innerText;
+            const amount = document.getElementById('receiptAmount').innerText;
+            const phone = document.getElementById('receiptPhone').innerText;
+            const method = document.getElementById('receiptMethod').innerText;
+            const date = document.getElementById('receiptDate').innerText;
+            
+            const content = `CAMPUS ACCOMMODATION PORTAL\nPayment Receipt\n\nReference: ${ref}\nHostel: ${hostel}\nAmount: ${amount}\nPhone: ${phone}\nMethod: ${method}\nDate: ${date}\n\nThank you for choosing CAP!`;
+            
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `receipt-${ref}.txt`;
+            a.click();
+        };
+        
+        // Close modals when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal-overlay')) {
+                e.target.style.display = 'none';
+            }
+        });
+    </script>
+<!-- LOGIN MODAL (WORKING VERSION) -->
+<div class="modal-overlay" id="loginModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+    <div class="modal" style="background: white; width: 90%; max-width: 450px; border-radius: 24px; padding: 30px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+        <button class="modal-close" id="closeModal" style="position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer;">&times;</button>
+        
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="{% static 'images/logo.jpg' %}" width="200px" height="90px" alt="CAP Logo" style="margin-bottom: 10px;">
+            <h3 style="color: #0D1B3E; margin: 0;">Login to Campus Accommodation Portal</h3>
+        </div>
+        
+        <div class="modal-body">
+            <form id="loginForm" method="post" action="{% url 'accounts:login' %}">
+                {% csrf_token %}
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Email</label>
+                    <input type="email" name="email" class="form-control" style="width: 100%; padding: 12px; border: 2px solid #c2e0f5; border-radius: 8px;" required>
+                </div>
+                
+                <div style="margin-bottom: 10px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Password</label>
+                    <input type="password" name="password" class="form-control" style="width: 100%; padding: 12px; border: 2px solid #c2e0f5; border-radius: 8px;" required>
+                </div>
+                
+                <!-- FORGOT PASSWORD LINK - THIS IS WHAT YOU NEED -->
+                <div style="text-align: right; margin-bottom: 20px;">
+                    <a href="{% url 'password_reset' %}" style="color: #2A4B9E; font-size: 13px; text-decoration: none;">
+                        <i class="fas fa-key"></i> Forgot password?
+                    </a>
+                </div>
+                
+                <button type="submit" style="width: 100%; background: linear-gradient(135deg, #D4AF37, #b8960c); color: #0D1B3E; border: none; padding: 14px; border-radius: 50px; font-weight: 700; font-size: 16px; cursor: pointer;">
+                    Login
+                </button>
+            </form>
+            
+            <p style="text-align: center; margin-top: 20px;">
+                Don't have an account? <a href="{% url 'landlord:index' %}" style="color: #D4AF37; font-weight: 600;">Register here</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Modal -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Setting up login modal");
+    
+    const loginBtn = document.getElementById('loginBtn');
+    const loginLink = document.getElementById('loginLink');
+    const loginModal = document.getElementById('loginModal');
+    const closeModal = document.getElementById('closeModal');
+    
+    console.log("Elements found:", {
+        loginBtn: loginBtn ? "yes" : "no",
+        loginLink: loginLink ? "yes" : "no",
+        loginModal: loginModal ? "yes" : "no"
+    });
+    
+    if (loginBtn && loginModal) {
+        loginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginModal.style.display = 'flex';
+            console.log("Login modal opened");
+        });
+    }
+    
+    if (loginLink && loginModal) {
+        loginLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginModal.style.display = 'flex';
+        });
+    }
+    
+    if (closeModal && loginModal) {
+        closeModal.addEventListener('click', function() {
+            loginModal.style.display = 'none';
+        });
+    }
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', function(e) {
+        if (e.target === loginModal) {
+            loginModal.style.display = 'none';
+        }
+    });
+});
+</script>
+</body>
+</html>

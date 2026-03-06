@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAP | Add New Hostel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        .create-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-header h1 {
+            color: #0D1B3E;
+            font-size: 28px;
+        }
+        
+        .form-card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #e1f0fa;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e1f0fa;
+        }
+        
+        .form-section h2 {
+            color: #0D1B3E;
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-section h2 i {
+            color: #D4AF37;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #0D1B3E;
+        }
+        
+        .form-group label i {
+            color: #D4AF37;
+            margin-right: 8px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1f0fa;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #D4AF37;
+            outline: none;
+        }
+        
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234a5568' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            padding-right: 40px;
+        }
+        
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 10px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #D4AF37;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn-primary {
+            background: #2A4B9E;
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+        }
+        
+        .btn-primary:hover {
+            background: #1f3a7a;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #2A4B9E;
+            color: #2A4B9E;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .btn-outline:hover {
+            background: #2A4B9E;
+            color: white;
+        }
+        
+        .hint {
+            color: #666;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row, .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <img src="{% static 'images/longlogo.png' %}" width="220px" height="85px" alt="BUSITEMA UNIVERSITY">
+                </div>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="{% url 'core:index' %}">Home</a></li>
+                    <li><a href="{% url 'hostels:list' %}">Find Hostels</a></li>
+                    <li><a href="{% url 'landlord:index' %}" class="active">For Landlords</a></li>
+                    <li><a href="{% url 'core:contact' %}">About & Contact</a></li>
+                </ul>
+                <div class="auth-buttons">
+                    <span class="btn btn-outline">Welcome, {{ user.first_name }}</span>
+                    <a href="{% url 'accounts:logout' %}" class="btn btn-primary">Logout</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="create-container">
+        <div class="page-header">
+            <h1><i class="fas fa-plus-circle" style="color: #D4AF37;"></i> Add New Hostel</h1>
+            <a href="{% url 'landlord:dashboard' %}" class="btn-outline" style="padding: 10px 20px; font-size: 14px;">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+
+        <div class="form-card">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <!-- Basic Information -->
+                <div class="form-section">
+                    <h2><i class="fas fa-info-circle"></i> Basic Information</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-hotel"></i> Hostel Name *</label>
+                            <input type="text" name="name" class="form-control" placeholder="e.g., Silver Tower" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-tag"></i> Hostel Type *</label>
+                            <select name="hostel_type" class="form-control" required>
+                                <option value="">-- Select Type --</option>
+                                <option value="mixed">Mixed</option>
+                                <option value="male">Male Only</option>
+                                <option value="female">Female Only</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Location -->
+                <div class="form-section">
+                    <h2><i class="fas fa-map-marker-alt"></i> Location</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-university"></i> Campus *</label>
+                            <select name="campus" class="form-control" required>
+                                <option value="">-- Select Campus --</option>
+                                <option value="main">🏛️ Main Campus</option>
+                                <option value="mbale">⚕️ Mbale Campus</option>
+                                <option value="namasagali">🔬 Namasagali Campus</option>
+                                <option value="nagongera">📚 Nagongera Campus</option>
+                                <option value="pallisa">💼 Pallisa Campus</option>
+                                <option value="arapai">🌾 Arapai Campus</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-map-pin"></i> Specific Location *</label>
+                            <input type="text" name="location" class="form-control" placeholder="e.g., Kikoni, near Main Gate" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Rooms & Pricing -->
+                <div class="form-section">
+                    <h2><i class="fas fa-bed"></i> Rooms & Pricing</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-door-open"></i> Total Rooms *</label>
+                            <input type="number" name="total_rooms" class="form-control" placeholder="e.g., 30" min="1" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-money-bill"></i> Price per Semester (UGX) *</label>
+                            <input type="number" name="price" class="form-control" placeholder="e.g., 1200000" min="0" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Description -->
+                <div class="form-section">
+                    <h2><i class="fas fa-align-left"></i> Description</h2>
+                    
+                    <div class="form-group">
+                        <textarea name="description" class="form-control" rows="4" placeholder="Tell students about your hostel..."></textarea>
+                    </div>
+                </div>
+                
+                <!-- Contact Information -->
+                <div class="form-section">
+                    <h2><i class="fas fa-phone"></i> Contact Information</h2>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-phone-alt"></i> Contact Phone *</label>
+                        <input type="tel" name="contact_phone" class="form-control" placeholder="e.g., 0704263611" required>
+                        <div class="hint">Ugandan format: 07XXXXXXXX (10 digits)</div>
+                    </div>
+                </div>
+                
+                <div class="btn-group">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Create Hostel
+                    </button>
+                    <a href="{% url 'landlord:dashboard' %}" class="btn-outline">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 Campus Accommodation Portal</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

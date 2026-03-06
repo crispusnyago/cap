@@ -1,0 +1,23 @@
+{% load static %}
+<header class="site-header">
+    <div class="container">
+        <nav class="navbar">
+            <div class="logo">
+                <img src="{% static 'images/longlogo.png' %}" width="220px" height="85px" alt="BUSITEMA UNIVERSITY">
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="{% url 'core:index' %}">Home</a></li>
+                <li><a href="{% url 'hostels:list' %}">Find Hostels</a></li>
+                <li><a href="{% url 'landlord:index' %}">For Landlords</a></li>
+                <li><a href="{% url 'core:contact' %}">About & Contact</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <span class="btn btn-outline">Welcome, {{ user.first_name }}</span>
+                <a href="{% url 'accounts:logout' %}" class="btn btn-primary">Logout</a>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+    </div>
+</header>

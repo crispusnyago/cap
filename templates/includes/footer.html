@@ -1,0 +1,69 @@
+{% load static %}
+<footer class="site-footer">
+    <div class="container">
+        <div class="footer-grid">
+            <!-- About Column -->
+            <div class="footer-col">
+                <div class="footer-logo">
+                    <img src="{% static 'images/longlogo.png' %}" width="200px" height="75px" alt="BUSITEMA UNIVERSITY">
+                </div>
+                <div class="footer-logo">
+                    <span>CampusAccom<span class="gold">modationPortal</span></span>
+                </div>
+                <p class="footer-text">
+                    Busitema University's most trusted student hostel finder. 
+                    Connecting students with safe, verified accommodation 
+                    across 6 university campuses.
+                </p>
+                <div class="footer-social">
+                    <a href="https://www.facebook.com/BusitemaUniversity"><i class="fab fa-facebook"></i></a>
+                    <a href="https://busitema.ac.ug/"><i class="fab fa-instagram"></i></a>
+                    <a href="https://twitter.com/BusitemaUni"><i class="fab fa-x-twitter"></i></a>
+                    <a href="https://youtube.com/@busitemauniversity8932"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <!-- Quick Links -->
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="{% url 'core:index' %}">Home</a></li>
+                    <li><a href="{% url 'hostels:list' %}">Find Hostels</a></li>
+                    <li><a href="{% url 'landlord:index' %}">For Landlords</a></li>
+                    <li><a href="{% url 'core:contact' %}">About Us</a></li>
+                </ul>
+            </div>
+            
+            <!-- Campuses -->
+            <div class="footer-col">
+                <h4>Our Campuses</h4>
+                <ul class="footer-links">
+                    <li><a href="{% url 'hostels:list' %}?campus=main">Main Campus</a></li>
+                    <li><a href="{% url 'hostels:list' %}?campus=mbale">Mbale Campus</a></li>
+                    <li><a href="{% url 'hostels:list' %}?campus=namasagali">Namasagali Campus</a></li>
+                    <li><a href="{% url 'hostels:list' %}?campus=nagongera">Nagongera Campus</a></li>
+                    <li><a href="{% url 'hostels:list' %}?campus=pallisa">Pallisa Campus</a></li>
+                    <li><a href="{% url 'hostels:list' %}?campus=arapai">Arapai Campus</a></li>
+                </ul>
+            </div>
+            
+            <!-- Contact -->
+            <div class="footer-col">
+                <h4>Contact Us</h4>
+                <ul class="footer-contact">
+                    <li><i class="fas fa-map-pin"></i> Jinja - Malaba Road, P.O.BOX 236, Tororo</li>
+                    <li><i class="fas fa-phone-alt"></i> +256 454 448 808</li>
+                    <li><i class="fas fa-envelope"></i> help@campusaccommodationportal.ug</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 Campus Accommodation Portal. All rights reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+        </div>
+    </div>
+</footer>

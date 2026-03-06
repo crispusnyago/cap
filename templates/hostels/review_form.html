@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAP | {% if is_edit %}Edit{% else %}Write{% endif %} Review</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        .review-container {
+            max-width: 600px;
+            margin: 60px auto;
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 1px solid #e1f0fa;
+        }
+        
+        .hostel-info {
+            background: linear-gradient(135deg, #f8fafc, #ffffff);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid #e1f0fa;
+        }
+        
+        .rating-stars {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .rating-stars i {
+            font-size: 32px;
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .rating-stars i.active {
+            color: #D4AF37;
+        }
+        
+        .rating-stars i:hover {
+            color: #D4AF37;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #0D1B3E;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e1f0fa;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #D4AF37;
+            outline: none;
+        }
+        
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, #D4AF37, #b8960c);
+            color: #0D1B3E;
+            border: none;
+            padding: 16px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(212,175,55,0.5);
+        }
+        
+        .btn-cancel {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #2A4B9E;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body style="background: linear-gradient(135deg, #f0f7ff, #ffffff); min-height: 100vh;">
+    <div class="container">
+        <div class="review-container">
+            <h1 style="color: #0D1B3E; margin-bottom: 20px;">
+                {% if is_edit %}Edit Your Review{% else %}Write a Review{% endif %}
+            </h1>
+            
+            <div class="hostel-info">
+                <h3 style="color: #0D1B3E; margin-bottom: 5px;">{{ hostel.name }}</h3>
+                <p style="color: #4a5568;">{{ hostel.get_campus_display }}</p>
+            </div>
+            
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label>Your Rating *</label>
+                    <div class="rating-stars" id="ratingStars">
+                        <i class="far fa-star" data-rating="1"></i>
+                        <i class="far fa-star" data-rating="2"></i>
+                        <i class="far fa-star" data-rating="3"></i>
+                        <i class="far fa-star" data-rating="4"></i>
+                        <i class="far fa-star" data-rating="5"></i>
+                    </div>
+                    <input type="hidden" name="rating" id="ratingInput" value="{{ form.rating.value|default:'5' }}">
+                </div>
+                
+                <div class="form-group">
+                    <label>Your Review *</label>
+                    <textarea name="comment" class="form-control" placeholder="Share your experience...">{{ form.comment.value|default:'' }}</textarea>
+                </div>
+                
+                <button type="submit" class="btn-submit">
+                    {% if is_edit %}Update Review{% else %}Submit Review{% endif %}
+                </button>
+                
+                <a href="{% url 'hostels:detail' hostel.id %}" class="btn-cancel">Cancel</a>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        const stars = document.querySelectorAll('#ratingStars i');
+        const ratingInput = document.getElementById('ratingInput');
+        
+        function setRating(rating) {
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.remove('far');
+                    star.classList.add('fas', 'active');
+                } else {
+                    star.classList.remove('fas', 'active');
+                    star.classList.add('far');
+                }
+            });
+            ratingInput.value = rating;
+        }
+        
+        // Set initial rating
+        setRating(parseInt(ratingInput.value) || 5);
+        
+        // Add click handlers
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = parseInt(this.dataset.rating);
+                setRating(rating);
+            });
+            
+            star.addEventListener('mouseover', function() {
+                const rating = parseInt(this.dataset.rating);
+                stars.forEach((s, index) => {
+                    if (index < rating) {
+                        s.classList.remove('far');
+                        s.classList.add('fas');
+                    } else {
+                        s.classList.remove('fas');
+                        s.classList.add('far');
+                    }
+                });
+            });
+            
+            star.addEventListener('mouseout', function() {
+                const currentRating = parseInt(ratingInput.value);
+                setRating(currentRating);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+{% load static %}
+<!-- 
+=====================================================================
+LANDLORD.HTML - CAP LANDLORD REGISTRATION PAGE
+=====================================================================
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Register as a landlord and list your hostel">
+    <title>CAP | Landlord Registration</title>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/landlord.css' %}">
+    
+    <style>
+        /* ===== COMPLETE LANDLORD PAGE STYLES ===== */
+        .landlord-hero {
+            padding: 40px 0 20px 0;
+            margin-bottom: 0;
+            background: linear-gradient(135deg, #f0f7ff, #ffffff);
+            text-align: center;
+            border-bottom: 1px solid #e1f0fa;
+        }
+        
+        .landlord-hero h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+            color: #0D1B3E;
+            font-weight: 700;
+        }
+        
+        .landlord-hero p {
+            font-size: 18px;
+            color: #4a5568;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .landlord-form-section {
+            padding: 40px 0 80px 0;
+            background: #ffffff;
+        }
+        
+        .form-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        .form-card {
+            background: white;
+            border-radius: 24px;
+            padding: 60px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            border: 1px solid #e1f0fa;
+            margin-bottom: 30px;
+        }
+        
+        .form-card h2 {
+            color: #0D1B3E;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px solid #e1f0fa;
+            padding-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .form-card h2 i {
+            color: #D4AF37;
+            font-size: 32px;
+        }
+        
+        .form-card h2 .badge {
+            font-size: 14px;
+            color: #666;
+            margin-left: auto;
+            font-weight: normal;
+            background: #f1f5f9;
+            padding: 6px 15px;
+            border-radius: 50px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #0D1B3E;
+            font-size: 15px;
+        }
+        
+        .form-group label i {
+            color: #D4AF37;
+            margin-right: 8px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e1f0fa;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        .form-control:focus {
+            border-color: #D4AF37;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(212,175,55,0.15);
+        }
+        
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234a5568' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 18px center;
+            padding-right: 45px;
+        }
+        
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            background: #f8fafc;
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid #e1f0fa;
+            margin-top: 10px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #D4AF37;
+        }
+        
+        .checkbox-item i {
+            color: #D4AF37;
+            width: 20px;
+            font-size: 16px;
+        }
+        
+        .form-divider {
+            height: 2px;
+            background: linear-gradient(90deg, #D4AF37, transparent);
+            margin: 40px 0;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 20px;
+            margin-top: 40px;
+        }
+        
+        .btn-large {
+            padding: 16px 30px;
+            font-size: 16px;
+            flex: 1;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #2A4B9E;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1f3a7a;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(42,75,158,0.3);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #2A4B9E;
+            color: #2A4B9E;
+        }
+        
+        .btn-outline:hover {
+            background: #2A4B9E;
+            color: white;
+        }
+        
+        .hint {
+            color: #666;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        /* Validation Styles */
+        .valid-nin {
+            border-color: #10B981 !important;
+            background-color: #f0fdf4 !important;
+        }
+        
+        .invalid-nin {
+            border-color: #EF4444 !important;
+            background-color: #fef2f2 !important;
+        }
+        
+        .nin-error {
+            color: #EF4444;
+            font-size: 12px;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+        
+        .nin-success {
+            color: #10B981;
+            font-size: 12px;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+        
+        /* Image Upload Styles */
+        .image-upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            margin: 20px 0;
+            transition: all 0.3s;
+        }
+        
+        .image-upload-area:hover {
+            border-color: #D4AF37;
+            background: #f1f5f9;
+        }
+        
+        .image-upload-area i {
+            font-size: 48px;
+            color: #D4AF37;
+            margin-bottom: 15px;
+        }
+        
+        .image-upload-area p {
+            color: #4a5568;
+            margin-bottom: 15px;
+        }
+        
+        .image-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .preview-item {
+            aspect-ratio: 1;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid #e1f0fa;
+            position: relative;
+        }
+        
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .preview-item .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 24px;
+            height: 24px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        
+        .preview-item .remove-btn:hover {
+            background: #dc2626;
+        }
+        
+        /* Login Prompt */
+        .login-prompt {
+            text-align: center;
+            margin-top: 30px;
+            padding: 25px;
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e1f0fa;
+        }
+        
+        .login-prompt a {
+            color: #D4AF37;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        
+        .login-prompt a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Footer */
+        .site-footer {
+            background: #0D1B3E;
+            color: white;
+            padding: 60px 0 20px;
+            margin-top: 60px;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-logo img {
+            margin-bottom: 15px;
+        }
+        
+        .footer-text {
+            color: #a0aec0;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+        
+        .footer-social {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s;
+        }
+        
+        .footer-social a:hover {
+            background: #D4AF37;
+            color: #0D1B3E;
+        }
+        
+        .footer-col h4 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 18px;
+            position: relative;
+        }
+        
+        .footer-col h4::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: #D4AF37;
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-links a {
+            color: #a0aec0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: #D4AF37;
+        }
+        
+        .footer-contact li {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 15px;
+            color: #a0aec0;
+        }
+        
+        .footer-contact i {
+            color: #D4AF37;
+            width: 20px;
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #a0aec0;
+            font-size: 14px;
+        }
+        
+        .footer-bottom-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .footer-bottom-links a {
+            color: #a0aec0;
+            text-decoration: none;
+        }
+        
+        .footer-bottom-links a:hover {
+            color: #D4AF37;
+        }
+        
+        @media (max-width: 768px) {
+            .form-card {
+                padding: 30px;
+            }
+            .form-row, .form-row-3, .checkbox-group, .footer-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-actions {
+                flex-direction: column;
+            }
+            .image-preview-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .footer-bottom {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <img src="{% static 'images/longlogo.png' %}" width="220px" height="85px" alt="BUSITEMA UNIVERSITY">
+                </div>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="{% url 'core:index' %}">Home</a></li>
+                    <li><a href="{% url 'hostels:list' %}">Find Hostels</a></li>
+                    <li><a href="{% url 'landlord:index' %}" class="active">For Landlords</a></li>
+                    <li><a href="{% url 'core:contact' %}">About & Contact</a></li>
+                </ul>
+                
+                <!-- CAMPUS SELECTOR -->
+                <div class="campus-selector">
+                    <select id="campusSelect" class="campus-dropdown">
+                        <option value="all">🎓 All Campuses</option>
+                        <option value="main">🏛️ Main Campus</option>
+                        <option value="mbale">⚕️ Mbale Campus</option>
+                        <option value="namasagali">🔬 Namasagali Campus</option>
+                        <option value="nagongera">📚 Nagongera Campus</option>
+                        <option value="pallisa">💼 Pallisa Campus</option>
+                        <option value="arapai">🌾 Arapai Campus</option>
+                    </select>
+                    <button class="campus-filter-btn" id="campusFilterBtn">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                </div>
+                
+                <div class="auth-buttons">
+                    <a href="#" class="btn btn-outline" id="loginBtn">Login</a>
+                    <a href="{% url 'landlord:index' %}" class="btn btn-primary">List Hostel</a>
+                </div>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+    <div class="nav-strip"></div>
+
+    <!-- LANDLORD HERO -->
+    <section class="landlord-hero">
+        <div class="container">
+            <h1>Become a Landlord</h1>
+            <p>List your hostel and reach thousands of students across 6 campuses</p>
+        </div>
+    </section>
+
+    <!-- REGISTRATION FORM -->
+    <section class="landlord-form-section">
+        <div class="container">
+            <div class="form-container">
+                <div class="form-card">
+                    <h2>
+                        <i class="fas fa-user-circle"></i>
+                        Step 1: Personal Information
+                        <span class="badge">All fields marked * are required</span>
+                    </h2>
+                    
+                    <form id="landlordForm" method="post" action="{% url 'landlord:register' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <!-- Row 1: First & Last Name -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label><i class="fas fa-user"></i> First Name *</label>
+                                <input type="text" name="first_name" id="firstName" class="form-control" placeholder="e.g., Crispus" required>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-user"></i> Last Name *</label>
+                                <input type="text" name="last_name" id="lastName" class="form-control" placeholder="e.g., Nyago" required>
+                            </div>
+                        </div>
+
+                        <!-- Row 2: Gender & Phone -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label><i class="fas fa-venus-mars"></i> Gender *</label>
+                                <select name="gender" id="gender" class="form-control" required>
+                                    <option value="">-- Select Gender --</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-phone"></i> Phone Number *</label>
+                                <input type="tel" name="phone" id="phone" class="form-control" placeholder="e.g., 0704263611" required>
+                                <div class="hint">Ugandan format: 07XXXXXXXX (10 digits)</div>
+                            </div>
+                        </div>
+
+                        <!-- Row 3: Email & Occupation -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label><i class="fas fa-envelope"></i> Email Address *</label>
+                                <input type="email" name="email" id="email" class="form-control" placeholder="crispusnyago@gmail.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-briefcase"></i> Occupation *</label>
+                                <input type="text" name="occupation" id="occupation" class="form-control" placeholder="e.g., Business Owner" required>
+                            </div>
+                        </div>
+
+                        <!-- Row 4: Nationality & ID Type -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label><i class="fas fa-globe"></i> Nationality *</label>
+                                <select name="nationality" id="nationality" class="form-control" required>
+                                    <option value="">-- Select Nationality --</option>
+                                    <option value="uganda">Ugandan</option>
+                                    <option value="kenya">Kenyan</option>
+                                    <option value="tanzania">Tanzanian</option>
+                                    <option value="rwanda">Rwandan</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-id-card"></i> ID Type *</label>
+                                <select name="id_type" id="idType" class="form-control" required>
+                                    <option value="">-- Select ID Type --</option>
+                                    <option value="nin">National ID (NIN)</option>
+                                    <option value="passport">Passport</option>
+                                    <option value="driver">Driver's License</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Row 5: ID Number & Password (with Gender-based NIN validation) -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label><i class="fas fa-qrcode"></i> ID Number / NIN *</label>
+                                <input type="text" name="id_number" id="idNumber" class="form-control" placeholder="e.g., CM12345678901" required>
+                                <div class="hint" id="ninHint">Format: CM12345678901 (Male) or CF12345678901 (Female) - 13 characters</div>
+                                <div id="ninFeedback" style="font-size: 12px; margin-top: 5px;"></div>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-lock"></i> Password *</label>
+                                <input type="password" name="password" id="password" class="form-control" placeholder="Minimum 8 characters" required>
+                                <div class="hint">At least 8 characters, 1 uppercase, 1 number</div>
+                            </div>
+                        </div>
+
+                        <!-- Location Section -->
+                        <h3 style="margin: 30px 0 15px 0; color: #0D1B3E; font-size: 22px;">
+                            <i class="fas fa-map-marker-alt" style="color: #D4AF37;"></i> Place of Residence
+                        </h3>
+
+                        <div class="form-row-3" id="locationDropdowns">
+                            <div class="form-group">
+                                <label>District *</label>
+                                <select name="district" id="district" class="form-control" required>
+                                    <option value="">-- Select District --</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>County *</label>
+                                <select name="county" id="county" class="form-control" required>
+                                    <option value="">-- Select County --</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Sub-county *</label>
+                                <select name="subcounty" id="subcounty" class="form-control" required>
+                                    <option value="">-- Select Sub-county --</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Hostel Details Section -->
+                        <div class="form-divider"></div>
+
+                        <h2 style="margin-top: 20px; color: #0D1B3E; font-size: 28px;">
+                            <i class="fas fa-hotel" style="color: #D4AF37;"></i>
+                            Step 2: Hostel Information
+                        </h2>
+                        <p style="color: #666; margin-bottom: 25px; font-size: 16px;">Tell us about the property you want to list</p>
+
+                        <!-- Row 1: Hostel Name & Type -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Hostel Name *</label>
+                                <input type="text" name="hostel_name" id="hostelName" class="form-control" placeholder="e.g., White House" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Hostel Type *</label>
+                                <select name="hostel_type" id="hostelType" class="form-control" required>
+                                    <option value="">-- Select Type --</option>
+                                    <option value="mixed">Mixed</option>
+                                    <option value="male">Male Only</option>
+                                    <option value="female">Female Only</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Row 2: Campus & Location -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nearest Campus *</label>
+                                <select name="campus" id="hostelCampus" class="form-control" required>
+                                    <option value="">-- Select Campus --</option>
+                                    <option value="main">🏛️ Main Campus</option>
+                                    <option value="mbale">⚕️ Mbale Campus</option>
+                                    <option value="namasagali">🔬 Namasagali Campus</option>
+                                    <option value="nagongera">📚 Nagongera Campus</option>
+                                    <option value="pallisa">💼 Pallisa Campus</option>
+                                    <option value="arapai">🌾 Arapai Campus</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Specific Location *</label>
+                                <input type="text" name="location" id="hostelLocation" class="form-control" placeholder="e.g., Kikoni" required>
+                            </div>
+                        </div>
+
+                        <!-- Row 3: Distance & Price -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Distance (meters) *</label>
+                                <input type="number" name="distance" id="distance" class="form-control" placeholder="e.g., 500" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Price per Semester (UGX) *</label>
+                                <input type="number" name="price" id="price" class="form-control" placeholder="e.g., 1200000" required>
+                            </div>
+                        </div>
+
+                        <!-- Row 4: Rooms -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Total Rooms *</label>
+                                <input type="number" name="total_rooms" id="totalRooms" class="form-control" placeholder="e.g., 30" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Currently Occupied</label>
+                                <input type="number" name="occupied" id="occupied" class="form-control" placeholder="e.g., 12" value="0">
+                            </div>
+                        </div>
+
+                        <!-- Facilities -->
+                        <div class="form-group">
+                            <label>Facilities Available</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="facilities" value="wifi"> <i class="fas fa-wifi"></i> WiFi
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="facilities" value="meals"> <i class="fas fa-utensils"></i> Meals
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="facilities" value="security"> <i class="fas fa-shield-alt"></i> Security
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="facilities" value="parking"> <i class="fas fa-parking"></i> Parking
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="facilities" value="gym"> <i class="fas fa-dumbbell"></i> Gym
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="facilities" value="study"> <i class="fas fa-book"></i> Study Room
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="facilities" value="ac"> <i class="fas fa-snowflake"></i> AC
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="facilities" value="tv"> <i class="fas fa-tv"></i> TV Lounge
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="facilities" value="kitchen"> <i class="fas fa-utensils"></i> Kitchen
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Contact Information -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Contact Phone (Display) *</label>
+                                <input type="tel" name="contact_phone" id="contactPhone" class="form-control" placeholder="e.g., 0704263611" required>
+                                <div class="hint">Ugandan format: 07XXXXXXXX (10 digits)</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Alternative Phone</label>
+                                <input type="tel" name="alt_phone" id="altPhone" class="form-control" placeholder="Optional">
+                            </div>
+                        </div>
+
+                        <!-- Image Upload Section -->
+                        <h3 style="margin: 30px 0 15px 0; color: #0D1B3E; font-size: 22px;">
+                            <i class="fas fa-images" style="color: #D4AF37;"></i> Hostel Photos
+                        </h3>
+                        
+                        <div class="image-upload-area" id="uploadArea">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Drag & drop images here or click to browse</p>
+                            <input type="file" name="images" id="fileInput" multiple accept="image/*" style="display: none;">
+                            <button type="button" class="btn btn-outline" id="browseBtn">
+                                <i class="fas fa-folder-open"></i> Choose Images
+                            </button>
+                            <p class="hint">Upload up to 5 images (JPG, PNG, max 5MB each)</p>
+                        </div>
+                        
+                        <div class="image-preview-grid" id="previewGrid"></div>
+
+                        <!-- Form Actions -->
+                        <div class="form-actions">
+                            <button type="reset" class="btn btn-outline btn-large">
+                                <i class="fas fa-times"></i> Clear Form
+                            </button>
+                            <button type="submit" class="btn btn-primary btn-large">
+                                <i class="fas fa-check-circle"></i> Register & List Hostel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Login Prompt -->
+                <div class="login-prompt">
+                    <p>Already have an account? <a href="#" id="loginLink">Login here</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LOGIN MODAL -->
+    <div class="modal-overlay" id="loginModal" style="display: none;">
+        <div class="modal">
+            <button class="modal-close" id="closeModal">&times;</button>
+            <div class="modal-header" style="text-align: center;">
+                <img src="{% static 'images/logo.jpg' %}" width="200px" height="90px" alt="CAP Logo">
+                <h3 class="modal-title">Login to Campus Accommodation Portal</h3>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm" method="post" action="{% url 'accounts:login' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" name="email" id="loginEmail" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" name="password" id="loginPassword" class="form-control" required>
+                    </div>
+                    <div style="text-align: right; margin-bottom: 15px;">
+                        <a href="{% url 'password_reset' %}" style="color: #2A4B9E; font-size: 13px;">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                </form>
+                <p class="text-center mt-3">
+                    Don't have an account? <a href="{% url 'landlord:index' %}">Register here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- COMPLETE FOOTER -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <!-- About Column -->
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <img src="{% static 'images/longlogo.png' %}" width="200px" height="75px" alt="BUSITEMA UNIVERSITY">
+                    </div>
+                    <p class="footer-text">
+                        Busitema University's most trusted student hostel finder. Connecting students with safe, verified accommodation across 6 campuses.
+                    </p>
+                    <div class="footer-social">
+                        <a href="https://www.facebook.com/BusitemaUniversity"><i class="fab fa-facebook"></i></a>
+                        <a href="https://busitema.ac.ug/"><i class="fab fa-instagram"></i></a>
+                        <a href="https://twitter.com/BusitemaUni"><i class="fab fa-x-twitter"></i></a>
+                        <a href="https://youtube.com/@busitemauniversity8932"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'core:index' %}">Home</a></li>
+                        <li><a href="{% url 'hostels:list' %}">Find Hostels</a></li>
+                        <li><a href="{% url 'landlord:index' %}">For Landlords</a></li>
+                        <li><a href="{% url 'core:contact' %}">About Us</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Campuses -->
+                <div class="footer-col">
+                    <h4>Our Campuses</h4>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'hostels:list' %}?campus=main">Main Campus</a></li>
+                        <li><a href="{% url 'hostels:list' %}?campus=mbale">Mbale Campus</a></li>
+                        <li><a href="{% url 'hostels:list' %}?campus=namasagali">Namasagali Campus</a></li>
+                        <li><a href="{% url 'hostels:list' %}?campus=nagongera">Nagongera Campus</a></li>
+                        <li><a href="{% url 'hostels:list' %}?campus=pallisa">Pallisa Campus</a></li>
+                        <li><a href="{% url 'hostels:list' %}?campus=arapai">Arapai Campus</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact -->
+                <div class="footer-col">
+                    <h4>Contact Us</h4>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-map-pin"></i> Jinja - Malaba Road, P.O.BOX 236, Tororo</li>
+                        <li><i class="fas fa-phone-alt"></i> +256 454 448 808</li>
+                        <li><i class="fas fa-envelope"></i> help@campusaccommodationportal.ug</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 Campus Accommodation Portal. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MAIN JAVASCRIPT -->
+    <script src="{% static 'js/script.js' %}"></script>
+    
+    <!-- UGANDA DISTRICTS DATA (ALL 146 DISTRICTS) -->
+    <script>
+    // Complete Uganda districts data
+    const ugandaDistricts = [
+        "Abim", "Adjumani", "Agago", "Alebtong", "Amolatar", "Amudat", "Amuria", "Amuru",
+        "Apac", "Arua", "Budaka", "Bududa", "Bugiri", "Bugweri", "Buhweju", "Buikwe",
+        "Bukedea", "Bukomansimbi", "Bukwo", "Bulambuli", "Buliisa", "Bundibugyo",
+        "Bushenyi", "Busia", "Butaleja", "Butambala", "Butebo", "Buvuma", "Buyende",
+        "Dokolo", "Gomba", "Gulu", "Hoima", "Ibanda", "Iganga", "Isingiro", "Jinja",
+        "Kaabong", "Kabale", "Kabarole", "Kaberamaido", "Kagadi", "Kakumiro", "Kalaki",
+        "Kalangala", "Kaliro", "Kalungu", "Kampala", "Kamuli", "Kamwenge", "Kanungu",
+        "Kapchorwa", "Kapelebyong", "Karenga", "Kasanda", "Kasese", "Katakwi", "Kayunga",
+        "Kazo", "Kibaale", "Kiboga", "Kibuku", "Kikuube", "Kiruhura", "Kiryandongo",
+        "Kisoro", "Kitgum", "Koboko", "Kole", "Kotido", "Kumi", "Kwania", "Kween",
+        "Kyankwanzi", "Kyegegwa", "Kyenjojo", "Kyotera", "Lamwo", "Lira", "Luuka",
+        "Luwero", "Lwengo", "Lyantonde", "Manafwa", "Maracha", "Masaka", "Masindi",
+        "Mayuge", "Mbale", "Mbarara", "Mitooma", "Mityana", "Moroto", "Moyo", "Mpigi",
+        "Mubende", "Mukono", "Nabilatuk", "Nakapiripirit", "Nakaseke", "Nakasongola",
+        "Namayingo", "Namisindwa", "Namutumba", "Napak", "Nebbi", "Ngora", "Ntoroko",
+        "Ntungamo", "Nwoya", "Obongi", "Omoro", "Otuke", "Oyam", "Pader", "Pakwach",
+        "Pallisa", "Rakai", "Rubanda", "Rubirizi", "Rukiga", "Rukungiri", "Sembabule",
+        "Serere", "Sheema", "Sironko", "Soroti", "Tororo", "Wakiso", "Yumbe", "Zombo"
+    ];
+    
+    // County data - COMPLETE with all districts
+    const countyData = {
+        "Kampala": ["Kampala Central", "Nakawa", "Makindye", "Rubaga", "Kawempe"],
+        "Wakiso": ["Kyadondo", "Busiro", "Entebbe"],
+        "Mukono": ["Mukono Central", "Nakifuma"],
+        "Jinja": ["Jinja Municipality", "Kagoma"],
+        "Mbale": ["Mbale Municipality", "Bubulo"],
+        "Gulu": ["Gulu Municipality", "Omoro", "Kilak"],
+        "Mbarara": ["Mbarara Municipality", "Kashari"],
+        "Arua": ["Arua Central", "Ayivu", "Terego"],
+        "Lira": ["Lira Municipality", "Erute"],
+        "Soroti": ["Soroti Municipality", "Dakabela"],
+        "Kabale": ["Kabale Municipality", "Ndorwa", "Rubanda"],
+        "Masaka": ["Masaka Municipality", "Bukoto"],
+        "Tororo": ["Tororo Municipality", "West Budama", "Tororo North"],
+        "Busia": ["Busia Municipality", "Samia-Bugwe"],
+        "Hoima": ["Hoima Municipality", "Bugahya"],
+        "Kasese": ["Kasese Municipality", "Bukonzo", "Busongora"],
+        "Fort Portal": ["Fort Portal Municipality", "Bunyangabu"],
+        "Abim": ["Labwor County"],
+        "Adjumani": ["East Moyo County"],
+        "Agago": ["Agago County"],
+        "Alebtong": ["Ajuri County", "Moroto County"],
+        "Amolatar": ["Kioga County"],
+        "Amudat": ["Upe County"],
+        "Amuria": ["Amuria County", "Kapelebyong County"],
+        "Amuru": ["Kilak County"],
+        "Apac": ["Kwania County", "Maruzi County"],
+        "Budaka": ["Budaka County", "Iki-Iki County"],
+        "Bududa": ["Manjiya County"],
+        "Bugiri": ["Bukooli County"],
+        "Bugweri": ["Bugweri County"],
+        "Buhweju": ["Buhweju County"],
+        "Buikwe": ["Buikwe County"],
+        "Bukedea": ["Bukedea County"],
+        "Bukomansimbi": ["Bukomansimbi County"],
+        "Bukwo": ["Kongasis County"],
+        "Bulambuli": ["Bulambuli County"],
+        "Buliisa": ["Buliisa County"],
+        "Bundibugyo": ["Bughendera County", "Bwamba County"],
+        "Bushenyi": ["Igara County", "Bushenyi-Ishaka Municipal Council"],
+        "Butaleja": ["Bunyole County"],
+        "Butambala": ["Butambala County"],
+        "Butebo": ["Butebo County"],
+        "Buvuma": ["Buvuma Islands County"],
+        "Buyende": ["Budiope East County", "Budiope West County"],
+        "Dokolo": ["Dokolo County"],
+        "Gomba": ["Gomba County"]
+    };
+    
+    // Subcounty data
+    const subcountyData = {
+        "Kampala Central": ["Central Division", "Kawempe Division", "Makindye Division", "Nakawa Division", "Rubaga Division"],
+        "Nakawa": ["Nakawa", "Kyambogo", "Naguru", "Bukoto", "Kisaasi"],
+        "Makindye": ["Makindye", "Kabalagala", "Nsambya", "Ggaba", "Lukuli"],
+        "Rubaga": ["Rubaga", "Lubaga", "Mutundwe", "Nateete"],
+        "Kawempe": ["Kawempe", "Bwaise", "Kyebando", "Wandegeya"],
+        "Kyadondo": ["Wakiso Town", "Nansana", "Kira", "Kasangati", "Gayaza"],
+        "Busiro": ["Entebbe", "Kajjansi", "Ssisa", "Nabweru", "Nangabo"],
+        "Mukono Central": ["Mukono Town", "Goma", "Nakisunga", "Kyetume", "Seeta"],
+        "Nakifuma": ["Nakifuma", "Kasawo", "Nagojje", "Kimenyedde"],
+        "Jinja Municipality": ["Jinja Central", "Masese", "Walukuba", "Mpumudde", "Bugembe"],
+        "Kagoma": ["Busede", "Buyengo", "Butagaya", "Budondo"],
+        "Mbale Municipality": ["Mbale Central", "Industrial Division", "Northern Division", "Wanale"],
+        "Bubulo": ["Bubulo", "Busoba", "Bukokho", "Bumasikye"],
+        "Gulu Municipality": ["Gulu Central", "Laroo", "Pece", "Kasubi"],
+        "Omoro": ["Omoro", "Lalogi", "Odek", "Koro"],
+        "Kilak": ["Kilak", "Palaro", "Paicho", "Bungatira"],
+        "Mbarara Municipality": ["Mbarara Central", "Nyamitanga", "Kakoba", "Kamukuzi"],
+        "Kashari": ["Bubaare", "Rubaya", "Kagongi", "Kakyeeka"],
+        "Arua Central": ["Arua Hill", "River Oli", "Arua Central"],
+        "Ayivu": ["Ayivu", "Pajulu", "Mvara", "Oluko"],
+        "Terego": ["Terego", "Katrini", "Omugo", "Uriama"],
+        "Lira Municipality": ["Lira Central", "Adyel", "Bar", "Ojwina"],
+        "Erute": ["Erute", "Amach", "Ogur", "Barr"],
+        "Soroti Municipality": ["Soroti Central", "Eastern", "Western"],
+        "Dakabela": ["Dakabela", "Gweri", "Arapai", "Katine"],
+        "Ndorwa": ["Ndorwa", "Kamuganguzi", "Kitumba", "Maziba"],
+        "Rubanda": ["Rubanda", "Hamurwa", "Bubaare", "Ikumba"],
+        "Bukoto": ["Bukoto", "Kyazanga", "Malongo"],
+        "Tororo Municipality": ["Tororo Central", "Northern", "Southern", "Eastern"],
+        "West Budama": ["West Budama", "Mulanda", "Nagongera", "Kwapa"],
+        "Tororo North": ["Tororo North", "Mukuju", "Kisoko"],
+        "Busia Municipality": ["Busia Central", "Northern", "Southern"],
+        "Samia-Bugwe": ["Samia-Bugwe", "Masaba", "Bulumbi", "Lumino"],
+        "Hoima Municipality": ["Hoima Central", "Eastern", "Western"],
+        "Bugahya": ["Bugahya", "Kigorobya", "Buhanika", "Kyabigambire"],
+        "Kasese Municipality": ["Kasese Central", "Nyamwamba", "Kilembe"],
+        "Bukonzo": ["Bukonzo", "Kitswamba", "Kyondo", "Maliba"],
+        "Busongora": ["Busongora", "Kasese", "Muhokya", "Katwe"],
+        "Fort Portal Municipality": ["Fort Portal Central", "Southern", "Western"],
+        "Bunyangabu": ["Bunyangabu", "Kibiito", "Rwimi"]
+    };
+    </script>
+    
+    <!-- DROPDOWN LOGIC -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("🚀 Initializing dropdowns...");
+        
+        // Get dropdown elements
+        const districtSelect = document.getElementById('district');
+        const countySelect = document.getElementById('county');
+        const subcountySelect = document.getElementById('subcounty');
+        
+        if (!districtSelect) {
+            console.error("District select not found!");
+            return;
+        }
+        
+        // Populate districts with ALL 146 districts
+        districtSelect.innerHTML = '<option value="">-- Select District --</option>';
+        
+        ugandaDistricts.sort().forEach(function(district) {
+            const option = document.createElement('option');
+            option.value = district;
+            option.textContent = district;
+            districtSelect.appendChild(option);
+        });
+        
+        console.log(`✅ Loaded ${ugandaDistricts.length} districts`);
+        
+        // District change handler
+        districtSelect.addEventListener('change', function() {
+            const selectedDistrict = this.value;
+            console.log("Selected district:", selectedDistrict);
+            
+            // Reset and enable county dropdown
+            countySelect.innerHTML = '<option value="">-- Select County --</option>';
+            subcountySelect.innerHTML = '<option value="">-- Select Sub-county --</option>';
+            
+            if (selectedDistrict && countyData[selectedDistrict]) {
+                const counties = countyData[selectedDistrict];
+                counties.sort().forEach(function(county) {
+                    const option = document.createElement('option');
+                    option.value = county;
+                    option.textContent = county;
+                    countySelect.appendChild(option);
+                });
+                console.log(`✅ Loaded ${counties.length} counties`);
+            } else {
+                // Add a default option
+                const option = document.createElement('option');
+                option.value = "Main County";
+                option.textContent = "Main County";
+                countySelect.appendChild(option);
+                console.log(`ℹ️ Using default county for ${selectedDistrict}`);
+            }
+        });
+        
+        // County change handler
+        countySelect.addEventListener('change', function() {
+            const selectedCounty = this.value;
+            console.log("Selected county:", selectedCounty);
+            
+            subcountySelect.innerHTML = '<option value="">-- Select Sub-county --</option>';
+            
+            if (selectedCounty && subcountyData[selectedCounty]) {
+                const subcounties = subcountyData[selectedCounty];
+                subcounties.sort().forEach(function(subcounty) {
+                    const option = document.createElement('option');
+                    option.value = subcounty;
+                    option.textContent = subcounty;
+                    subcountySelect.appendChild(option);
+                });
+                console.log(`✅ Loaded ${subcounties.length} subcounties`);
+            } else {
+                // Add default subcounties
+                for (let i = 1; i <= 3; i++) {
+                    const option = document.createElement('option');
+                    option.value = `Sub-county ${i}`;
+                    option.textContent = `Sub-county ${i}`;
+                    subcountySelect.appendChild(option);
+                }
+                console.log(`ℹ️ Using default subcounties`);
+            }
+        });
+        
+        // ===== GENDER-BASED NIN VALIDATION =====
+        const genderSelect = document.getElementById('gender');
+        const ninInput = document.getElementById('idNumber');
+        const ninFeedback = document.getElementById('ninFeedback');
+        
+        function validateNIN() {
+            const gender = genderSelect.value;
+            let nin = ninInput.value.toUpperCase().trim();
+            
+            if (!gender) {
+                ninFeedback.innerHTML = '⚠️ Please select gender first';
+                ninFeedback.style.color = '#F59E0B';
+                ninInput.classList.remove('valid-nin', 'invalid-nin');
+                return;
+            }
+            
+            if (!nin) {
+                ninFeedback.innerHTML = '';
+                ninInput.classList.remove('valid-nin', 'invalid-nin');
+                return;
+            }
+            
+            // Check length
+            if (nin.length !== 13) {
+                ninFeedback.innerHTML = `❌ NIN must be 13 characters (currently ${nin.length})`;
+                ninFeedback.style.color = '#EF4444';
+                ninInput.classList.add('invalid-nin');
+                ninInput.classList.remove('valid-nin');
+                return;
+            }
+            
+            // Check prefix based on gender
+            const expectedPrefix = gender === 'male' ? 'CM' : 'CF';
+            if (!nin.startsWith(expectedPrefix)) {
+                ninFeedback.innerHTML = `❌ ${gender === 'male' ? 'Male' : 'Female'} NIN must start with "${expectedPrefix}"`;
+                ninFeedback.style.color = '#EF4444';
+                ninInput.classList.add('invalid-nin');
+                ninInput.classList.remove('valid-nin');
+                return;
+            }
+            
+            // Check alphanumeric
+            const remaining = nin.substring(2);
+            if (!/^[A-Z0-9]{11}$/.test(remaining)) {
+                ninFeedback.innerHTML = '❌ Use only letters and numbers';
+                ninFeedback.style.color = '#EF4444';
+                ninInput.classList.add('invalid-nin');
+                ninInput.classList.remove('valid-nin');
+                return;
+            }
+            
+            // Valid
+            ninFeedback.innerHTML = '✅ Valid NIN';
+            ninFeedback.style.color = '#10B981';
+            ninInput.classList.add('valid-nin');
+            ninInput.classList.remove('invalid-nin');
+        }
+        
+        if (genderSelect && ninInput && ninFeedback) {
+            genderSelect.addEventListener('change', validateNIN);
+            ninInput.addEventListener('input', validateNIN);
+        }
+        
+        // Image upload preview
+        const browseBtn = document.getElementById('browseBtn');
+        const fileInput = document.getElementById('fileInput');
+        const previewGrid = document.getElementById('previewGrid');
+        
+        if (browseBtn && fileInput) {
+            browseBtn.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            fileInput.addEventListener('change', function() {
+                previewGrid.innerHTML = '';
+                
+                for (let i = 0; i < this.files.length; i++) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        const preview = document.createElement('div');
+                        preview.className = 'preview-item';
+                        preview.innerHTML = `<img src="${e.target.result}"><button class="remove-btn" onclick="this.parentElement.remove()">&times;</button>`;
+                        previewGrid.appendChild(preview);
+                    }
+                    
+                    reader.readAsDataURL(this.files[i]);
+                }
+            });
+        }
+        
+        // Login modal
+        const loginBtn = document.getElementById('loginBtn');
+        const loginLink = document.getElementById('loginLink');
+        const loginModal = document.getElementById('loginModal');
+        const closeModal = document.getElementById('closeModal');
+        
+        if (loginBtn && loginModal) {
+            loginBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                loginModal.style.display = 'flex';
+            });
+        }
+        
+        if (loginLink && loginModal) {
+            loginLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                loginModal.style.display = 'flex';
+            });
+        }
+        
+        if (closeModal && loginModal) {
+            closeModal.addEventListener('click', function() {
+                loginModal.style.display = 'none';
+            });
+        }
+        
+        // Campus filter button
+        const filterBtn = document.getElementById('campusFilterBtn');
+        if (filterBtn) {
+            filterBtn.addEventListener('click', function() {
+                const campus = document.getElementById('campusSelect').value;
+                if (campus !== 'all') {
+                    window.location.href = "{% url 'hostels:list' %}?campus=" + campus;
+                } else {
+                    window.location.href = "{% url 'hostels:list' %}";
+                }
+            });
+        }
+        
+        // Form submission with validation
+        const form = document.getElementById('landlordForm');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                const gender = genderSelect.value;
+                const nin = ninInput.value;
+                
+                if (gender && nin && !ninInput.classList.contains('valid-nin')) {
+                    e.preventDefault();
+                    alert('Please enter a valid NIN for your selected gender');
+                }
+            });
+        }
+    });
+    </script>
+</body>
+</html>

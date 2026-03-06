@@ -1,0 +1,67 @@
+import random
+import string
+from datetime import datetime, timedelta
+from django.core.cache import cache
+from .easypay_service import send_sms_via_easypay  # We'll create this next
+
+class OTPService:
+    """
+    OTP Service for phone number verification
+    Uses cache to store OTPs temporarily (expires in 5 minutes)
+    """
+    
+    OTP_EXPIRY_SECONDS = 300  # 5 minutes
+    
+    @staticmethod
+    def generate_otp(length=6):
+        """Generate a numeric OTP of specified length"""
+        return ''.join(random.choices(string.digits, k=length))
+    
+    @staticmethod
+    def get_cache_key(phone_number):
+        """Generate cache key for a phone number"""
+        return f"otp_{phone_number}"
+    
+    @classmethod
+    def send_otp(cls, phone_number):
+        """
+        Generate and send OTP to phone number
+        Returns: (success, message, otp for testing)
+        """
+        # Generate OTP
+        otp = cls.generate_otp()
+        
+        # Store in cache with expiry
+        cache_key = cls.get_cache_key(phone_number)
+        cache.set(cache_key, otp, timeout=cls.OTP_EXPIRY_SECONDS)
+        
+        # Prepare message
+        message = f"Your Campus Accommodation Portal verification code is: {otp}. Valid for 5 minutes."
+        
+        # In production, send via Easypay SMS
+        # sms_sent = send_sms_via_easypay(phone_number, message)
+        
+        # For development, just print to console
+        print(f"📱 OTP for {phone_number}: {otp}")
+        
+        # Return success and the OTP (for testing only - remove in production!)
+        return True, "OTP sent successfully", otp
+    
+    @classmethod
+    def verify_otp(cls, phone_number, entered_otp):
+        """
+        Verify OTP for a phone number
+        Returns: (is_valid, message)
+        """
+        cache_key = cls.get_cache_key(phone_number)
+        stored_otp = cache.get(cache_key)
+        
+        if not stored_otp:
+            return False, "OTP expired or not found. Please request a new one."
+        
+        if stored_otp == entered_otp:
+            # Delete OTP after successful verification (one-time use)
+            cache.delete(cache_key)
+            return True, "OTP verified successfully"
+        else:
+            return False, "Invalid OTP. Please try again."

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAP | Find Hostels</title>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/hostels.css' %}">
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <img src="{% static 'images/longlogo.png' %}" width="220px" height="85px" alt="BUSITEMA UNIVERSITY">
+                </div>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="{% url 'core:index' %}">Home</a></li>
+                    <li><a href="{% url 'hostels:list' %}" class="active">Find Hostels</a></li>
+                    <li><a href="{% url 'landlord:index' %}">For Landlords</a></li>
+                    <li><a href="{% url 'core:contact' %}">About & Contact</a></li>
+                </ul>
+                <div class="campus-selector">
+                    <select id="campusSelect" class="campus-dropdown">
+                        <option value="all">🎓 All Campuses</option>
+                        <option value="main">🏛️ Main Campus</option>
+                        <option value="mbale">⚕️ Mbale Campus</option>
+                        <option value="namasagali">🔬 Namasagali Campus</option>
+                        <option value="nagongera">📚 Nagongera Campus</option>
+                        <option value="pallisa">💼 Pallisa Campus</option>
+                        <option value="arapai">🌾 Arapai Campus</option>
+                    </select>
+                    <button class="campus-filter-btn" id="campusFilterBtn">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                </div>
+                <div class="auth-buttons">
+                    <a href="#" class="btn btn-outline" id="loginBtn">Login</a>
+                    <a href="{% url 'landlord:index' %}" class="btn btn-primary">List Hostel</a>
+                </div>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+    <div class="nav-strip"></div>
+
+    <!-- PAGE HEADER -->
+    <section class="page-header">
+        <div class="container">
+            <div class="breadcrumbs">
+                <a href="{% url 'core:index' %}">Home</a> 
+                <i class="fas fa-chevron-right"></i>
+                <span>Find Hostels</span>
+            </div>
+            <h1>Find Your <span class="gold">Perfect Stay</span></h1>
+            <p>Browse through verified hostels across all 6 campuses.</p>
+        </div>
+    </section>
+
+    <!-- MAIN HOSTELS SECTION WITH FULL FILTERS -->
+    <section class="hostels-page">
+        <div class="container">
+            <div class="hostels-layout">
+                <!-- FILTER SIDEBAR - FULL VERSION -->
+                <aside class="filter-sidebar">
+                    <h3 class="filter-title">
+                        <i class="fas fa-sliders-h"></i> Filter Hostels
+                    </h3>
+                    
+                    <form method="get" action="{% url 'hostels:list' %}">
+                        <!-- Campus Filter -->
+                        <div class="filter-section">
+                            <h4>Campus</h4>
+                            <div class="filter-option">
+                                <input type="checkbox" name="campus" value="all" id="campusAll" {% if not request.GET.campus %}checked{% endif %}>
+                                <label for="campusAll">All Campuses</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" name="campus" value="main" id="campusMain" {% if request.GET.campus == 'main' %}checked{% endif %}>
+                                <label for="campusMain">Main Campus (Engineering)</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" name="campus" value="mbale" id="campusMbale" {% if request.GET.campus == 'mbale' %}checked{% endif %}>
+                                <label for="campusMbale">Mbale Campus (Health)</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" name="campus" value="namasagali" id="campusNamasagali" {% if request.GET.campus == 'namasagali' %}checked{% endif %}>
+                                <label for="campusNamasagali">Namasagali Campus (Environment)</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" name="campus" value="nagongera" id="campusNagongera" {% if request.GET.campus == 'nagongera' %}checked{% endif %}>
+                                <label for="campusNagongera">Nagongera Campus (Education)</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" name="campus" value="pallisa" id="campusPallisa" {% if request.GET.campus == 'pallisa' %}checked{% endif %}>
+                                <label for="campusPallisa">Pallisa Campus (Business)</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" name="campus" value="arapai" id="campusArapai" {% if request.GET.campus == 'arapai' %}checked{% endif %}>
+                                <label for="campusArapai">Arapai Campus (Agriculture)</label>
+                            </div>
+                        </div>
+                        
+                        <!-- Price Range Filter -->
+                        <div class="filter-section">
+                            <h4>Price per Semester (UGX)</h4>
+                            <div class="price-range">
+                                <input type="number" name="min_price" id="minPrice" placeholder="Min" value="{{ request.GET.min_price }}">
+                                <span>to</span>
+                                <input type="number" name="max_price" id="maxPrice" placeholder="Max" value="{{ request.GET.max_price }}">
+                            </div>
+                        </div>
+                        
+                        <!-- Hostel Type Filter -->
+                        <div class="filter-section">
+                            <h4>Hostel Type</h4>
+                            <div class="filter-option">
+                                <input type="checkbox" name="type" value="mixed" id="typeMixed" {% if request.GET.type == 'mixed' %}checked{% endif %}>
+                                <label for="typeMixed">Mixed</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" name="type" value="male" id="typeMale" {% if request.GET.type == 'male' %}checked{% endif %}>
+                                <label for="typeMale">Male Only</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" name="type" value="female" id="typeFemale" {% if request.GET.type == 'female' %}checked{% endif %}>
+                                <label for="typeFemale">Female Only</label>
+                            </div>
+                        </div>
+                        
+                        <!-- Facilities Filter -->
+                        <div class="filter-section">
+                            <h4>Facilities</h4>
+                            <div class="filter-option">
+                                <input type="checkbox" name="facility" value="wifi" id="facWifi" {% if request.GET.facility == 'wifi' %}checked{% endif %}>
+                                <label for="facWifi"><i class="fas fa-wifi"></i> WiFi</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" name="facility" value="meals" id="facMeals" {% if request.GET.facility == 'meals' %}checked{% endif %}>
+                                <label for="facMeals"><i class="fas fa-utensils"></i> Meals</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" name="facility" value="security" id="facSecurity" {% if request.GET.facility == 'security' %}checked{% endif %}>
+                                <label for="facSecurity"><i class="fas fa-shield-alt"></i> Security</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" name="facility" value="parking" id="facParking" {% if request.GET.facility == 'parking' %}checked{% endif %}>
+                                <label for="facParking"><i class="fas fa-parking"></i> Parking</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" name="facility" value="gym" id="facGym" {% if request.GET.facility == 'gym' %}checked{% endif %}>
+                                <label for="facGym"><i class="fas fa-dumbbell"></i> Gym</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" name="facility" value="study" id="facStudy" {% if request.GET.facility == 'study' %}checked{% endif %}>
+                                <label for="facStudy"><i class="fas fa-book"></i> Study Room</label>
+                            </div>
+                        </div>
+                        
+                        <!-- Filter Buttons -->
+                        <button type="submit" class="apply-filters-btn">
+                            <i class="fas fa-check"></i> Apply Filters
+                        </button>
+                        <a href="{% url 'hostels:list' %}" class="clear-filters-btn">
+                            <i class="fas fa-times"></i> Clear All
+                        </a>
+                    </form>
+                </aside>
+                
+                <!-- HOSTELS GRID -->
+                <div class="hostels-results">
+                    <div class="results-header">
+                        <div class="results-count">
+                            <span>{{ hostels.count }}</span> hostels found
+                        </div>
+                    </div>
+
+                    <div class="hostel-grid">
+                        {% for hostel in hostels %}
+                        <a href="{% url 'hostels:detail' hostel.id %}" class="hostel-card">
+                            <div class="hostel-image">
+                                {% if hostel.images.first %}
+                                    <img src="{{ hostel.images.first.image.url }}" alt="{{ hostel.name }}">
+                                {% else %}
+                                    <img src="{% static 'images/default-hostel.jpg' %}" alt="{{ hostel.name }}">
+                                {% endif %}
+                                {% if hostel.is_verified %}
+                                    <div class="hostel-badge">Verified</div>
+                                {% endif %}
+                            </div>
+                            <div class="hostel-info">
+                                <h3>{{ hostel.name }}</h3>
+                                <p class="hostel-price">UGX {{ hostel.price_per_semester|floatformat:0 }}/sem</p>
+                                <p class="hostel-location">
+                                    <i class="fas fa-map-pin"></i> 
+                                    {% if hostel.campus == 'main' %}Main Campus
+                                    {% elif hostel.campus == 'mbale' %}Mbale Campus
+                                    {% elif hostel.campus == 'namasagali' %}Namasagali Campus
+                                    {% elif hostel.campus == 'nagongera' %}Nagongera Campus
+                                    {% elif hostel.campus == 'pallisa' %}Pallisa Campus
+                                    {% elif hostel.campus == 'arapai' %}Arapai Campus
+                                    {% endif %}
+                                </p>
+                                <span class="hostel-btn">View Details</span>
+                            </div>
+                        </a>
+                        {% empty %}
+                        <div class="no-results">
+                            <i class="fas fa-search"></i>
+                            <h3>No Hostels Found</h3>
+                            <p>Try adjusting your filters</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== COMPLETE FOOTER (SAME AS OTHER PAGES) ========== -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <!-- About Column -->
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <img src="{% static 'images/longlogo.png' %}" width="200px" height="75px" alt="BUSITEMA UNIVERSITY">
+                    </div>
+                    <div class="footer-logo">
+                        <span>CampusAccom<span class="gold">modationPortal</span></span>
+                    </div>
+                    <p class="footer-text">
+                        Busitema's most trusted student hostel finder. 
+                        Connecting students with safe, verified accommodation 
+                        across 6 university campuses.
+                    </p>
+                    <div class="footer-social">
+                        <a href="https://www.facebook.com/BusitemaUniversity"><i class="fab fa-facebook"></i></a>
+                        <a href="https://busitema.ac.ug/"><i class="fab fa-instagram"></i></a>
+                        <a href="https://twitter.com/BusitemaUni"><i class="fab fa-x-twitter"></i></a>
+                        <a href="https://youtube.com/@busitemauniversity8932"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'core:index' %}">Home</a></li>
+                        <li><a href="{% url 'hostels:list' %}">Find Hostels</a></li>
+                        <li><a href="{% url 'landlord:index' %}">For Landlords</a></li>
+                        <li><a href="{% url 'core:contact' %}">About Us</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Campuses -->
+                <div class="footer-col">
+                    <h4>Our Campuses</h4>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'hostels:list' %}?campus=main">Main Campus</a></li>
+                        <li><a href="{% url 'hostels:list' %}?campus=mbale">Mbale Campus</a></li>
+                        <li><a href="{% url 'hostels:list' %}?campus=namasagali">Namasagali Campus</a></li>
+                        <li><a href="{% url 'hostels:list' %}?campus=nagongera">Nagongera Campus</a></li>
+                        <li><a href="{% url 'hostels:list' %}?campus=pallisa">Pallisa Campus</a></li>
+                        <li><a href="{% url 'hostels:list' %}?campus=arapai">Arapai Campus</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact -->
+                <div class="footer-col">
+                    <h4>Contact Us</h4>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-map-pin"></i> Jinja - Malaba Road, P.O.BOX 236, Tororo</li>
+                        <li><i class="fas fa-phone-alt"></i> +256 454 448 808</li>
+                        <li><i class="fas fa-envelope"></i> help@campusaccommodationportal.ug</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 CampusAccommodationPortal. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- LOGIN MODAL -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <button class="modal-close" id="closeModal">&times;</button>
+            <div class="modal-header" style="text-align: center;">
+                <img src="{% static 'images/logo.jpg' %}" width="250px" height="120px" alt="BUSITEMA UNIVERSITY">
+                <h3 class="modal-title">Login to Campus Accommodation Portal</h3>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/script.js' %}"></script>
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn')?.addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+        
+        // Login modal
+        document.getElementById('loginBtn')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('loginModal').style.display = 'flex';
+        });
+        
+        document.getElementById('closeModal')?.addEventListener('click', function() {
+            document.getElementById('loginModal').style.display = 'none';
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal-overlay')) {
+                e.target.style.display = 'none';
+            }
+        });
+        
+        // Campus filter button
+        document.getElementById('campusFilterBtn')?.addEventListener('click', function() {
+            const campus = document.getElementById('campusSelect').value;
+            if (campus !== 'all') {
+                window.location.href = "{% url 'hostels:list' %}?campus=" + campus;
+            } else {
+                window.location.href = "{% url 'hostels:list' %}";
+            }
+        });
+    </script>
+<script>
+// Login modal functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const loginBtn = document.getElementById('loginBtn');
+    const loginLink = document.getElementById('loginLink');
+    const loginModal = document.getElementById('loginModal');
+    const closeModal = document.getElementById('closeModal');
+    
+    if (loginBtn && loginModal) {
+        loginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginModal.style.display = 'flex';
+        });
+    }
+    
+    if (loginLink && loginModal) {
+        loginLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginModal.style.display = 'flex';
+        });
+    }
+    
+    if (closeModal && loginModal) {
+        closeModal.addEventListener('click', function() {
+            loginModal.style.display = 'none';
+        });
+    }
+    
+    window.addEventListener('click', function(e) {
+        if (e.target.classList.contains('modal-overlay')) {
+            e.target.style.display = 'none';
+        }
+    });
+});
+</script>
+<!-- LOGIN MODAL (WORKING VERSION) -->
+<div class="modal-overlay" id="loginModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+    <div class="modal" style="background: white; width: 90%; max-width: 450px; border-radius: 24px; padding: 30px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+        <button class="modal-close" id="closeModal" style="position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer;">&times;</button>
+        
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="{% static 'images/logo.jpg' %}" width="200px" height="90px" alt="CAP Logo" style="margin-bottom: 10px;">
+            <h3 style="color: #0D1B3E; margin: 0;">Login to Campus Accommodation Portal</h3>
+        </div>
+        
+        <div class="modal-body">
+            <form id="loginForm" method="post" action="{% url 'accounts:login' %}">
+                {% csrf_token %}
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Email</label>
+                    <input type="email" name="email" class="form-control" style="width: 100%; padding: 12px; border: 2px solid #c2e0f5; border-radius: 8px;" required>
+                </div>
+                
+                <div style="margin-bottom: 10px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Password</label>
+                    <input type="password" name="password" class="form-control" style="width: 100%; padding: 12px; border: 2px solid #c2e0f5; border-radius: 8px;" required>
+                </div>
+                
+                <!-- FORGOT PASSWORD LINK - THIS IS WHAT YOU NEED -->
+                <div style="text-align: right; margin-bottom: 20px;">
+                    <a href="{% url 'password_reset' %}" style="color: #2A4B9E; font-size: 13px; text-decoration: none;">
+                        <i class="fas fa-key"></i> Forgot password?
+                    </a>
+                </div>
+                
+                <button type="submit" style="width: 100%; background: linear-gradient(135deg, #D4AF37, #b8960c); color: #0D1B3E; border: none; padding: 14px; border-radius: 50px; font-weight: 700; font-size: 16px; cursor: pointer;">
+                    Login
+                </button>
+            </form>
+            
+            <p style="text-align: center; margin-top: 20px;">
+                Don't have an account? <a href="{% url 'landlord:index' %}" style="color: #D4AF37; font-weight: 600;">Register here</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Modal -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Setting up login modal");
+    
+    const loginBtn = document.getElementById('loginBtn');
+    const loginLink = document.getElementById('loginLink');
+    const loginModal = document.getElementById('loginModal');
+    const closeModal = document.getElementById('closeModal');
+    
+    console.log("Elements found:", {
+        loginBtn: loginBtn ? "yes" : "no",
+        loginLink: loginLink ? "yes" : "no",
+        loginModal: loginModal ? "yes" : "no"
+    });
+    
+    if (loginBtn && loginModal) {
+        loginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginModal.style.display = 'flex';
+            console.log("Login modal opened");
+        });
+    }
+    
+    if (loginLink && loginModal) {
+        loginLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            loginModal.style.display = 'flex';
+        });
+    }
+    
+    if (closeModal && loginModal) {
+        closeModal.addEventListener('click', function() {
+            loginModal.style.display = 'none';
+        });
+    }
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', function(e) {
+        if (e.target === loginModal) {
+            loginModal.style.display = 'none';
+        }
+    });
+});
+</script>
+
+</body>
+</html>

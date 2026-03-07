@@ -153,6 +153,30 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
+import os
+import dj_database_url  # Add this at top with other imports
+
+# At the bottom of ALLOWED_HOSTS, add:
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com']
+
+# Replace DATABASES section with:
+DATABASES = {
+    'default': dj_database_url.config(
+        default='sqlite:///db.sqlite3',
+        conn_max_age=600
+    )
+}
+
+# Add at the bottom:
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Make sure whitenoise is in MIDDLEWARE (right after SecurityMiddleware):
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # ADD THIS LINE
+    # ... rest of your middleware
+]
 
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'

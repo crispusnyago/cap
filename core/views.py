@@ -36,3 +36,16 @@ def about(request):
 def contact(request):
     """Contact page view"""
     return render(request, 'core/contact.html')
+from django.shortcuts import render
+from hostels.models import Hostel
+
+def index(request):
+    """Homepage view"""
+    # Get featured hostels (latest 6 verified hostels)
+    featured_hostels = Hostel.objects.filter(is_verified=True).order_by('-created_at')[:6]
+    
+    context = {
+        'featured_hostels': featured_hostels,
+        'page_title': 'Home - Campus Accommodation Portal',
+    }
+    return render(request, 'core/index.html', context)
